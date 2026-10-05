@@ -1,16 +1,18 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
-
-# Klasse fuer verschiedene Kundentypen
 class Kunde:
-    def __init__(self, wendepunkt, tankvolumen=60, fahrer_geschwindigkeit=50):
-        self.wendepunkt = wendepunkt #
+    """
+    Modell fuer einen Kunden bei einer Tankstelle
+    """
+    def __init__(self, wendepunkt:float=0, tankvolumen:int=60, fahrer_geschwindigkeit:int=50):
+        self.wendepunkt = wendepunkt # theoretischer Bereitschaftswert. Ein "Give a Fuck" Faktor. Je hoeher desto leichter wechseln die Autofahrer die Tankstelle bei Preisunterschieden
         self.tankvolumen = tankvolumen
         self.fahrer_geschwindigkeit = fahrer_geschwindigkeit
 
-    # gibt den Anteil der Wechsler für einen Interessewert an. Funktion basiert auf der Einkommensverteilung in Deutschland
-    def aktivierung(self, X, a=3.4045, p=0.8971):
+    def aktivierung(self, X, a:float=3.4045, p:float=0.8971):
+        """
+        Gibt den Anteil der Wechsler für einen Interessewert an. Funktion basiert auf der Einkommensverteilung in Deutschland
+        """
         if self.wendepunkt == 0:
             return 1
         b = 1.046*self.wendepunkt
@@ -22,13 +24,15 @@ class Kunde:
         
 
 class Tankstelle:
-    def __init__(self, preis, distanz=0):
+    def __init__(self, preis:int, distanz:int=0):
         self.preis = preis # EUR/L
         self.distanz = distanz # Kilometer vom Ortnullpunkt
 
+    #Optimale Preise fuer maximales profit_volumen()
     def preis_anpassen():
         return 0
 
+    # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
     def profit_volumen():
         return 0
 

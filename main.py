@@ -42,10 +42,41 @@ aktivierung_AC = kunde.aktivierung(X=ersparnis_AC, uhrzeit=uhrzeit)
 aktivierung_CA = kunde.aktivierung(X=ersparnis_CA, uhrzeit=uhrzeit)
 aktivierung_CB = kunde.aktivierung(X=ersparnis_CB, uhrzeit=uhrzeit)
 
+# Berechnung der Wechselwahrscheinlichkeiten
+if aktivierung_AB > aktivierung_AC:
+    wechsel_A_nach_B = aktivierung_AB * fluss_A
+    wechsel_A_nach_C = 0
+elif aktivierung_AB < aktivierung_AC:
+    wechsel_A_nach_B = 0
+    wechsel_A_nach_C = aktivierung_AC * fluss_A
+else:
+    wechsel_A_nach_B = 0.5 * aktivierung_AB * fluss_A
+    wechsel_A_nach_C = 0.5 * aktivierung_AC * fluss_A
 
-kundschaft_A = fluss_A - aktivierung_AB * fluss_A + aktivierung_BA * fluss_B + aktivierung_CA * fluss_C
-kundschaft_B = fluss_A - aktivierung_BA * fluss_B + aktivierung_AB * fluss_A + aktivierung_CB * fluss_C
-kundschaft_C = fluss_C - aktivierung_AC * fluss_C + aktivierung_BC * fluss_B + aktivierung_AC * fluss_A
+if aktivierung_BA > aktivierung_BC:
+    wechsel_B_nach_A = aktivierung_BA * fluss_B
+    wechsel_B_nach_C = 0
+elif aktivierung_BA < aktivierung_BC:
+    wechsel_B_nach_A = 0
+    wechsel_B_nach_C = aktivierung_BC * fluss_B
+else:
+    wechsel_B_nach_A = 0.5 * aktivierung_BA * fluss_B
+    wechsel_B_nach_C = 0.5 * aktivierung_BC * fluss_B
+
+if aktivierung_CA > aktivierung_CB:
+    wechsel_C_nach_A = aktivierung_CA * fluss_C
+    wechsel_C_nach_B = 0
+elif aktivierung_CA < aktivierung_CB:
+    wechsel_C_nach_A = 0
+    wechsel_C_nach_B = aktivierung_CB * fluss_C
+else:
+    wechsel_C_nach_A = 0.5 * aktivierung_CA * fluss_C
+    wechsel_C_nach_B = 0.5 * aktivierung_CB * fluss_C
+
+# Berechnung der Kundschaft für jede Tankstelle
+kundschaft_A = fluss_A - wechsel_A_nach_B - wechsel_A_nach_C + wechsel_B_nach_A + wechsel_C_nach_A
+kundschaft_B = fluss_B - wechsel_B_nach_A - wechsel_B_nach_C + wechsel_A_nach_B + wechsel_C_nach_B
+kundschaft_C = fluss_C - wechsel_C_nach_A - wechsel_C_nach_B + wechsel_A_nach_C + wechsel_B_nach_C
 
 profit_volumen_A = tankstelle_A.profit_volumen(kundschaft=kundschaft_A)
 profit_volumen_B = tankstelle_B.profit_volumen(kundschaft=kundschaft_B)
@@ -92,4 +123,3 @@ print("=======")
 print("Profit Volumen Tankstelle A", profit_volumen_A) 
 print("Profit Volumen Tankstelle B", profit_volumen_B)
 print("Profit Volumen Tankstelle C", profit_volumen_C)
-

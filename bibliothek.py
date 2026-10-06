@@ -9,20 +9,23 @@ class Kunde:
         self.tankvolumen = tankvolumen
         self.fahrer_geschwindigkeit = fahrer_geschwindigkeit
 
-    def aktivierung(self, X, uhrzeit:float = 12, a:float=3.4045, p:float=0.8971):
+    def aktivierung(self, X, uhrzeit:float = 12):
         """
-        Gibt den Anteil der Wechsler für einen Interessewert an. Funktion basiert auf der Einkommensverteilung in Deutschland
+        Gibt den Anteil der Wechsler für einen Interessewert (Ersparnis pro weg)
+        an. Funktion basiert auf der Einkommensverteilung in Deutschland
         """
-        #if X <= 0:
-        #    return 0
+        a:float=3.4045
+        p:float=0.8971
+        if X <= 0:
+            return 0
         if self.wendepunkt == 0:
             return 1
         b = 1.046* self.wendepunkt * self.stress_funktion(uhrzeit)
         anteil = (1 + (X/b) ** -a) ** -p
         return anteil
 
-    def ersparnis_pro_weg(self, Tankstelle_Start, Tankstelle_Ziel):
-        return 0.01 * ( self.tankvolumen * np.abs(Tankstelle_Start.preis - Tankstelle_Ziel.preis) ) / ( Tankstelle_Ziel.distanz / self.fahrer_geschwindigkeit ) # EUR/h
+    def ersparnis_pro_weg(self, Tankstelle_Start, Tankstelle_Ziel, abstand:int = 1):
+        return 0.01 * ( self.tankvolumen * (Tankstelle_Start.verkaufs_preis - Tankstelle_Ziel.verkaufs_preis) ) / ( abstand / self.fahrer_geschwindigkeit ) # EUR/h
     
     def stress_funktion(self, stunde:int=12):
         # 24-Stunden-Periodizität
@@ -43,22 +46,22 @@ class Kunde:
         return stress_faktor
 
 class Tankstelle:
-    def __init__(self, preis:int, distanz:int=0, einkaufs_preis:float = 70, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
+    def __init__(self, preis:int, einkaufs_preis:float = 70, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
         self.verkaufs_preis = preis # EUR/L
-        self.distanz = distanz # Kilometer vom Ortnullpunkt
         self.einkaufs_preis = einkaufs_preis # cents
         self.energie_steuer = energie_steuer # cents
-        self.co_2_steuer = co_2_abgabe # cents
+        self.co_2_abgabe = co_2_abgabe # cents
         self.mehrwert_steuer = mehrwert_steuer # anteil
 
     #Optimale Preise fuer maximales profit_volumen()
-    def preis_anpassen():
+    def preis_anpassen(self, Tankstelle_konkurrent, ):
         # """ mogliche Parameter: Maximaler preissprung, Konkurrenz Tankstelle, aktivierungsfunktion der Kunden"""
-        return 0
+        verkaufs_preis_optimal = 1
+        return verkaufs_preis_optimal
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
     def profit_volumen(self, kundschaft:float=1):
-        margin = (self.verkaufs_preis - self.einkaufs_preis)/(1+self.mehrwert_steuer) - self.self.co_2_abgabe - self.energie_steuer
+        margin = (self.verkaufs_preis - self.einkaufs_preis)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
         return kundschaft * margin
 
 

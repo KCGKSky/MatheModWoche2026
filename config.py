@@ -5,9 +5,10 @@
 
 ### ALLGEMEIN 
 
-verbose_value = False   # Debug Information in der Console anzeigen
-uhrzeit = 10            # Uhrzeit der Simulation, 0-24 h
-app_nutzer_anteil = 1.0 # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen
+verbose_value = True      # Debug Information in der Console anzeigen
+uhrzeit:int = 12          # Uhrzeit der Simulation, 0-24 h
+app_nutzer_anteil = 1.0   # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen
+verkehr = 200 # Anzahl von Tanken pro Stunde
 
 
 ### TANKSTELLEN
@@ -16,18 +17,18 @@ abstand_AB = 1
 abstand_BC = 5
 abstand_AC = 5
 
-fluss_A = 0.5
-fluss_B = 0.5
-fluss_C = 0
+fluss_A = 0.3
+fluss_B = 0.7
+fluss_C = 0.0
 
-start_preis_A = 200 # Cent pro Liter
-start_preis_B = 200 # Cent pro Liter
-start_preis_C = 190 # Cent pro Liter
+preis_start_A = 176 # Cent pro Liter
+preis_start_B = 175 # Cent pro Liter
+preis_start_C = 169 # Cent pro Liter
 
 
 ### KUNDEN
 
-tankvolumen = 60            # Liter
+tankvolumen = 120            # Liter
 fahrer_geschwindigkeit = 50 # km/h
 
 wendepunkt_vollzeit= 100        # EUR/h Einsparungsrate

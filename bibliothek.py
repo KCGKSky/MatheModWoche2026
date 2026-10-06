@@ -1,4 +1,5 @@
 import numpy as np
+import config as config
 
 class Kunde:
     """
@@ -28,7 +29,7 @@ class Kunde:
         return anteil
 
     def ersparnis_pro_weg(self, Tankstelle_Start, Tankstelle_Ziel, abstand:int = 1):
-        return 0.01 * ( self.tankvolumen * (Tankstelle_Start.verkaufs_preis - Tankstelle_Ziel.verkaufs_preis) ) / ( abstand / self.fahrer_geschwindigkeit ) # EUR/h
+        return 0.01 * ( self.tankvolumen * (Tankstelle_Start.preis_verkauf - Tankstelle_Ziel.preis_verkauf) ) / ( abstand / self.fahrer_geschwindigkeit ) # EUR/h
     
     def stress_funktion(self, stunde:int=12):
         # 24-Stunden-Periodizität
@@ -50,9 +51,9 @@ class Kunde:
 
 
 class Tankstelle:
-    def __init__(self, preis:int, einkaufs_preis:float = 70, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
-        self.verkaufs_preis = preis # EUR/L
-        self.einkaufs_preis = einkaufs_preis # cents
+    def __init__(self, preis_verkauf:int, preis_einkauf:float = 70, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
+        self.preis_verkauf = preis_verkauf # EUR/L
+        self.preis_einkauf = preis_einkauf # cents
         self.energie_steuer = energie_steuer # cents
         self.co_2_abgabe = co_2_abgabe # cents
         self.mehrwert_steuer = mehrwert_steuer # anteil
@@ -64,15 +65,16 @@ class Tankstelle:
         return verkaufs_preis_optimal
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
-    def profit_volumen(self, kundschaft:float=1):
-        margin = (self.verkaufs_preis - self.einkaufs_preis)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
-        return kundschaft * margin
+    def profit_volumen(self, kundschaft:float=1, verkehr=1):
+        margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
+        return 0.01 * config.tankvolumen * verkehr * kundschaft * margin
 
 
 
 def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
                              uhrzeit:int = 12, 
                              app_nutzer_anteil:float = 1.0,
+                             verkehr = 1,
                              abstand_AB:float = 1,
                              abstand_BC:float = 1,
                              abstand_AC:float = 1,
@@ -142,13 +144,13 @@ def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
     #Check for validity of flow dynamics
     total_kundschaft = kundschaft_A + kundschaft_B + kundschaft_C
     total_fluss = fluss_A + fluss_B + fluss_C
-    if total_kundschaft != total_fluss:
+    if np.abs(total_kundschaft - total_fluss) > 10**-7:
         print("something aint right")
 
     # Calling the profit volume calculator for the customers
-    profit_volumen_A = tankstelle_A.profit_volumen(kundschaft=kundschaft_A)
-    profit_volumen_B = tankstelle_B.profit_volumen(kundschaft=kundschaft_B)
-    profit_volumen_C = tankstelle_C.profit_volumen(kundschaft=kundschaft_C)
+    profit_volumen_A = tankstelle_A.profit_volumen(kundschaft=kundschaft_A, verkehr=verkehr)
+    profit_volumen_B = tankstelle_B.profit_volumen(kundschaft=kundschaft_B, verkehr=verkehr)
+    profit_volumen_C = tankstelle_C.profit_volumen(kundschaft=kundschaft_C, verkehr=verkehr)
 
     if verbose == True:
         print("\n=== INFORMATION TANKSTELLE VERGLEICH ===")
@@ -159,20 +161,21 @@ def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
 
         print("======")
 
-        print("Fluss A", fluss_A)
-        print("Fluss B", fluss_B)
-        print("Fluss C", fluss_C)
+        print("Fluss A: ", fluss_A)
+        print("Fluss B: ", fluss_B)
+        print("Fluss C: ", fluss_C)
 
         print("======")
 
-        print("Preis Tankstelle A: ", tankstelle_A.verkaufs_preis, "Cent")
-        print("Preis Tankstelle B: ", tankstelle_B.verkaufs_preis, "Cent")
-        print("Preis Tankstelle C: ", tankstelle_C.verkaufs_preis, "Cent")
+        print("Preis Tankstelle A: ", tankstelle_A.preis_verkauf, "Cent")
+        print("Preis Tankstelle B: ", tankstelle_B.preis_verkauf, "Cent")
+        print("Preis Tankstelle C: ", tankstelle_C.preis_verkauf, "Cent")
 
         print("=======")
 
         print("Uhrzeit: ", uhrzeit)
         print("App Nutzer Anteil: ", app_nutzer_anteil)
+        print("Verkehrteilnehmer:", verkehr)
 
         print("=======")
 

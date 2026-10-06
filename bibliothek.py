@@ -30,6 +30,7 @@ class Tankstelle:
 
     #Optimale Preise fuer maximales profit_volumen()
     def preis_anpassen():
+        # """ mogliche Parameter: Maximaler preissprung, Konkurrenz Tankstelle, aktivierungsfunktion der Kunden"""
         return 0
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
@@ -37,3 +38,6 @@ class Tankstelle:
         return 0
 
 
+# Implement Class for Verkehrflow
+# in order to simulate changing global environments
+# Sprung, 

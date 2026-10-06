@@ -7,21 +7,21 @@ from matplotlib.widgets import Button, Slider
 
 
 # Initialisierung Kunden
-kunde = bib.Kunde(1000)
+kunde = bib.Kunde(75)
 vollzeit_kunde = bib.Kunde(40, tankvolumen=60) # Wendepunkt (theoretischer Wert) EURO die Stunde
 teilzeit_kunde = bib.Kunde(20)
 unbeschaftigt_kunde = bib.Kunde(10)
 
 # Initialisierung Tankstellen
 tankstelle_A = bib.Tankstelle(200) # Preis
-tankstelle_B = bib.Tankstelle(210)
-tankstelle_C = bib.Tankstelle(199)
+tankstelle_B = bib.Tankstelle(200)
+tankstelle_C = bib.Tankstelle(190)
 
-uhrzeit = 15
+uhrzeit = 7
 
-abstand_AB = 0.1
-abstand_BC = 2.1
-abstand_AC = 2.0
+abstand_AB = 1
+abstand_BC = 5
+abstand_AC = 5
 
 fluss_A = 0.5
 fluss_B = 0.5

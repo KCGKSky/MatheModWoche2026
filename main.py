@@ -86,6 +86,10 @@ print("")
 
 print("=== INFORMATION TANKSTELLE VERGLEICH A & B ===")
 
+print("Abstand A und B:", abstand_AB)
+print("Abstand B und C:", abstand_BC)
+print("Abstand C und A:", abstand_AC)
+
 print("===")
 
 print("Fluss A", fluss_A)

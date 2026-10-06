@@ -27,7 +27,7 @@ fluss_B = 0.5
 fluss_C = 0
 
 
-volume_list = bib.profit_volumen_auswerten(kunde=kunde, 
+profit_volumen_liste = bib.profit_volumen_auswerten(kunde=kunde, 
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
@@ -41,4 +41,15 @@ volume_list = bib.profit_volumen_auswerten(kunde=kunde,
                              verbose=verbose_value
                              )
 
-print(volume_list)
+print(profit_volumen_liste)
+"""
+# Preise in cent
+preis_start = 0
+preis_end = 500
+
+tankstelle = tankstelle_A
+
+def generate_volume_sheet()
+    for i in range(preis_start, preis_end, 1):
+        tankstelle
+"""

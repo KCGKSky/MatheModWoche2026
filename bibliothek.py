@@ -13,6 +13,8 @@ class Kunde:
         """
         Gibt den Anteil der Wechsler für einen Interessewert an. Funktion basiert auf der Einkommensverteilung in Deutschland
         """
+        if X <= 0:
+            return 0
         if self.wendepunkt == 0:
             return 1
         b = 1.046*self.wendepunkt*self.stress_funktion(uhrzeit)

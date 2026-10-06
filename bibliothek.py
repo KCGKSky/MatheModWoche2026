@@ -13,11 +13,11 @@ class Kunde:
         """
         Gibt den Anteil der Wechsler für einen Interessewert an. Funktion basiert auf der Einkommensverteilung in Deutschland
         """
-        if X <= 0:
-            return 0
+        #if X <= 0:
+        #    return 0
         if self.wendepunkt == 0:
             return 1
-        b = 1.046*self.wendepunkt*self.stress_funktion(uhrzeit)
+        b = 1.046* self.wendepunkt * self.stress_funktion(uhrzeit)
         anteil = (1 + (X/b) ** -a) ** -p
         return anteil
 
@@ -43,9 +43,13 @@ class Kunde:
         return stress_faktor
 
 class Tankstelle:
-    def __init__(self, preis:int, distanz:int=0):
-        self.preis = preis # EUR/L
+    def __init__(self, preis:int, distanz:int=0, einkaufs_preis:float = 70, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
+        self.verkaufs_preis = preis # EUR/L
         self.distanz = distanz # Kilometer vom Ortnullpunkt
+        self.einkaufs_preis = einkaufs_preis # cents
+        self.energie_steuer = energie_steuer # cents
+        self.co_2_steuer = co_2_abgabe # cents
+        self.mehrwert_steuer = mehrwert_steuer # anteil
 
     #Optimale Preise fuer maximales profit_volumen()
     def preis_anpassen():
@@ -53,8 +57,11 @@ class Tankstelle:
         return 0
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
-    def profit_volumen():
-        return 0
+    def profit_volumen(self, kundschaft:float=1):
+        margin = (self.verkaufs_preis - self.einkaufs_preis)/(1+self.mehrwert_steuer) - self.self.co_2_abgabe - self.energie_steuer
+        return kundschaft * margin
+
+
 
 
 # Implement Class for Verkehrflow

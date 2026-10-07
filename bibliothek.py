@@ -5,7 +5,7 @@ class Kunde:
     """
     Modell fuer einen Kunden bei einer Tankstelle
     """
-    def __init__(self, wendepunkt:float=0, tankvolumen:int=60, fahrer_geschwindigkeit:int=30):
+    def __init__(self, wendepunkt:float=0, tankvolumen:int=config.tankvolumen, fahrer_geschwindigkeit:int=config.fahrer_geschwindigkeit):
         # wendepunkt := Bereitschaftswert. Ein "Give a Fuck" Faktor. 
         # Je hoeher desto leichter wechseln die Autofahrer die Tankstelle bei Preisunterschieden
         # Einheit ist Ersparnis pro stunde in EUR/h
@@ -13,7 +13,7 @@ class Kunde:
         self.tankvolumen = tankvolumen
         self.fahrer_geschwindigkeit = fahrer_geschwindigkeit
 
-    def aktivierung(self, X, uhrzeit:float = 12):
+    def aktivierung(self, X, uhrzeit:float = config.uhrzeit):
         """
         Gibt den Anteil der Wechsler für einen Interessewert (Ersparnis pro weg)
         an. Funktion basiert auf der Einkommensverteilung in Deutschland
@@ -28,12 +28,12 @@ class Kunde:
         anteil = (1 + (X/b) ** -a) ** -p
         return anteil
 
-    def ersparnis_pro_weg(self, Tankstelle_Start, Tankstelle_Ziel, abstand:int = 1):
+    def ersparnis_pro_weg(self, Tankstelle_Start, Tankstelle_Ziel, abstand:int):
         return 0.01 * ( self.tankvolumen * (Tankstelle_Start.preis_verkauf - Tankstelle_Ziel.preis_verkauf) ) / ( abstand / self.fahrer_geschwindigkeit ) # EUR/h
     
-    def stress_funktion(self, stunde:int=12):
+    def stress_funktion(self, uhrzeit:int=config.uhrzeit):
         # 24-Stunden-Periodizität
-        x24 = stunde % 24
+        x24 = uhrzeit % 24
 
         # bisherige Tagesfunktion
         f = (
@@ -43,7 +43,7 @@ class Kunde:
         ) / 27
 
         # Sinusfunktion
-        s = np.sin(2 * np.pi * stunde / 24 - 2 * np.pi) + 1
+        s = np.sin(2 * np.pi * uhrzeit / 24 - 2 * np.pi) + 1
 
         # miteinander verrechnen
         stress_faktor = f * s
@@ -51,7 +51,7 @@ class Kunde:
 
 
 class Tankstelle:
-    def __init__(self, preis_verkauf:int, preis_einkauf:float = 120, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
+    def __init__(self, preis_verkauf:int, preis_einkauf:float, energie_steuer:int = config.energie_steuer, co_2_abgabe:float = config.co_2_abgabe, mehrwert_steuer:float=config.mehrwert_steuer):
         self.preis_verkauf = preis_verkauf # EUR/L
         self.preis_einkauf = preis_einkauf # cents
         self.energie_steuer = energie_steuer # cents
@@ -65,22 +65,22 @@ class Tankstelle:
         return verkaufs_preis_optimal
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
-    def gewinn_erwartung(self, kundschaft:float=1, verkehr=1):
+    def gewinn_erwartung(self, kundschaft:float=1, tankvolumen=config.tankvolumen, verkehr=config.verkehr):
         margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
-        return 0.01 * config.tankvolumen * verkehr * kundschaft * margin
+        return 0.01 * tankvolumen * verkehr * kundschaft * margin
 
 
 
 def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
-                             uhrzeit:int = 12, 
-                             app_nutzer_anteil:float = 1.0,
-                             verkehr = 1,
-                             abstand_AB:float = 1,
-                             abstand_BC:float = 1,
-                             abstand_AC:float = 1,
-                             fluss_A:float = 1,
-                             fluss_B:float = 1,
-                             fluss_C:float = 1,
+                             uhrzeit:int = config.uhrzeit, 
+                             app_nutzer_anteil:float = config.app_nutzer_anteil,
+                             verkehr = config.verkehr,
+                             abstand_AB:float = config.abstand_AB,
+                             abstand_BC:float = config.abstand_BC,
+                             abstand_AC:float = config.abstand_AC,
+                             fluss_A:float = config.fluss_A,
+                             fluss_B:float = config.fluss_B,
+                             fluss_C:float = config.fluss_C,
                              verbose:bool = False
                              ):
     """
@@ -170,6 +170,15 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         print("Preis Tankstelle A: ", tankstelle_A.preis_verkauf, "Cent")
         print("Preis Tankstelle B: ", tankstelle_B.preis_verkauf, "Cent")
         print("Preis Tankstelle C: ", tankstelle_C.preis_verkauf, "Cent")
+        tabelle = preis_zu_profit_tabelle(kunde=kunde,
+                                  tankstelle_A=tankstelle_A,
+                                  tankstelle_B=tankstelle_B,
+                                  tankstelle_C=tankstelle_C, 
+                                  verbose=False)
+
+        print("Optimalpreis fur Tankstelle A:", tabelle[0].index(max(tabelle[0])))
+        print("Optimalpreis fur Tankstelle B:", tabelle[1].index(max(tabelle[1])))
+        print("Optimalpreis fur Tankstelle C:", tabelle[2].index(max(tabelle[2])))      
 
         print("=======")
 
@@ -214,7 +223,7 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
 
 
 
-def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=0, preis_end=100, verbose=False):
+def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=config.preis_start, preis_end=config.preis_end, verbose=config.verbose_value):
     # for Tankstelle A
     tabelle_A = [0]*preis_end
     preis_origin = tankstelle_A.preis_verkauf
@@ -224,16 +233,16 @@ def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, pre
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             uhrzeit=12,
-                             verkehr=1,
-                             app_nutzer_anteil=1,
-                             abstand_AC=1,
-                             abstand_BC=1,
-                             abstand_AB=1,
-                             fluss_A=1,
-                             fluss_B=1,
-                             fluss_C=1,
-                             verbose=False
+                             uhrzeit=config.uhrzeit,
+                             verkehr=config.verkehr,
+                             app_nutzer_anteil=config.app_nutzer_anteil,
+                             abstand_AC=config.abstand_AC,
+                             abstand_BC=config.abstand_BC,
+                             abstand_AB=config.abstand_AB,
+                             fluss_A=config.fluss_A,
+                             fluss_B=config.fluss_B,
+                             fluss_C=config.fluss_C,
+                             verbose=verbose
                              )[0]
          
     tankstelle_A.preis_verkauf = preis_origin
@@ -247,39 +256,39 @@ def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, pre
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             uhrzeit=12,
-                             verkehr=1,
-                             app_nutzer_anteil=1,
-                             abstand_AC=1,
-                             abstand_BC=1,
-                             abstand_AB=1,
-                             fluss_A=1,
-                             fluss_B=1,
-                             fluss_C=1,
-                             verbose=False
+                             uhrzeit=config.uhrzeit,
+                             verkehr=config.verkehr,
+                             app_nutzer_anteil=config.app_nutzer_anteil,
+                             abstand_AC=config.abstand_AC,
+                             abstand_BC=config.abstand_BC,
+                             abstand_AB=config.abstand_AB,
+                             fluss_A=config.fluss_A,
+                             fluss_B=config.fluss_B,
+                             fluss_C=config.fluss_C,
+                             verbose=verbose
                              )[1]
          
     tankstelle_B.preis_verkauf = preis_origin
 
     # for Tankstelle C
     tabelle_C = [0]*preis_end
-    preis_origin = tankstelle_B.preis_verkauf
+    preis_origin = tankstelle_C.preis_verkauf
     for preis_sim in range(preis_start, preis_end, 1):
         tankstelle_C.preis_verkauf = preis_sim
         tabelle_C[preis_sim] = profit_volumen(kunde=kunde, 
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             uhrzeit=12,
-                             verkehr=1,
-                             app_nutzer_anteil=1,
-                             abstand_AC=1,
-                             abstand_BC=1,
-                             abstand_AB=1,
-                             fluss_A=1,
-                             fluss_B=1,
-                             fluss_C=1,
-                             verbose=False
+                             uhrzeit=config.uhrzeit,
+                             verkehr=config.verkehr,
+                             app_nutzer_anteil=config.app_nutzer_anteil,
+                             abstand_AC=config.abstand_AC,
+                             abstand_BC=config.abstand_BC,
+                             abstand_AB=config.abstand_AB,
+                             fluss_A=config.fluss_A,
+                             fluss_B=config.fluss_B,
+                             fluss_C=config.fluss_C,
+                             verbose=verbose
                              )[2]
          
     tankstelle_C.preis_verkauf = preis_origin

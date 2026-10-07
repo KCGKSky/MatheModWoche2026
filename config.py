@@ -6,22 +6,22 @@
 ### ALLGEMEIN 
 
 verbose_value = False      # Debug Information in der Console anzeigen
-uhrzeit:int = 7          # Uhrzeit der Simulation, 0-24 h
-app_nutzer_anteil = 1.0   # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen
+uhrzeit:int = 7            # Uhrzeit der Simulation, 0-24 h
+app_nutzer_anteil = 1.0    # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen
 verkehr = 200 # Anzahl von Tanken pro Stunde
 
 
 ### TANKSTELLEN
 
 abstand_AB = 1
-abstand_BC = 2
-abstand_AC = 2
+abstand_BC = 5
+abstand_AC = 5
 
 fluss_A = 0.5
 fluss_B = 0.5
 fluss_C = 0.0
 
-preis_start_A = 201 # Cent pro Liter
+preis_start_A = 200 # Cent pro Liter
 preis_start_B = 200 # Cent pro Liter
 preis_start_C = 190 # Cent pro Liter
 
@@ -51,4 +51,4 @@ wendepunkt_unbeschaftigt = 50   # EUR/h Einsparungsrate
 ### EVALUATION
 
 preis_start = 0 # Profit_optimum berechnung start
-preis_end = 300 # Profit_optimum berechnung ende (Bis wohin schaut man nach)
+preis_end = 400 # Profit_optimum berechnung ende (Bis wohin schaut man nach)

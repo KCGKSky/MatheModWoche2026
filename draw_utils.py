@@ -31,7 +31,7 @@ def plot_profit_over_uhrzeit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, s
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-    plt.show()
+
 
 
 def plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
@@ -66,7 +66,7 @@ def plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tanks
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-    plt.show()
+
 
 
 def plot_preis_zu_profit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=False):
@@ -83,9 +83,20 @@ def plot_preis_zu_profit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbo
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-    plt.show()
 
 
+
+def plot_stress_function(kunden):
+    stress = [0]*24
+    for i in range(0, 24, 1):
+        stress[i] = kunden[0].stress_funktion(i)
+
+    plt.plot(stress, label="Stress im Verkehr")
+    plt.xlabel("Uhrzeit [h]")
+    plt.ylabel("Stress")
+    plt.legend()
+    plt.grid(True)
+          
 
 #y = eingependelte_preise = bib.optimal_konstellation(80, kunde=kunde, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)
 #x = np.arange(0, 24, 0.1)

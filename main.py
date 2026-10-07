@@ -35,5 +35,8 @@ kunden = [
 
 dr.plot_profit_over_uhrzeit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
 dr.plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
+dr.plot_stress_function(kunden)
+
+plt.show()
 
 #bib.optimal_konstellation(simultan = False, kunden=kunden, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)

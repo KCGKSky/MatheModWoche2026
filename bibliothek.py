@@ -47,7 +47,7 @@ class Kunde:
         s = np.sin(2 * np.pi * uhrzeit / 24 - 2 * np.pi) + 1
 
         # miteinander verrechnen
-        stress_faktor = f + s
+        stress_faktor = 0.1 * f * s + 1
         #stress_faktor = 1
         return stress_faktor
 

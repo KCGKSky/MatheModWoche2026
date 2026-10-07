@@ -307,3 +307,40 @@ def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, pre
             print("Tankstelle C: ", i, tabelle_C[i])
 
     return tabelle_A, tabelle_B, tabelle_C
+
+def optimal_konstellation(wiederholungen, kunde, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value):
+    if verbose == True:
+        print("=== KONSTELLATION FINDEN ===")
+        print("Startpreis: Verkaufspreis Tankstelle A: ", config.preis_start_A)
+        print("Startpreis: Verkaufspreis Tankstelle B: ", config.preis_start_B)  
+        print("Startpreis: Verkaufspreis Tankstelle C: ", config.preis_start_C)
+        print("")
+    for i in range(1, wiederholungen+1, 1):
+        # Tankstelle A optimiert
+        tabelle_A = preis_zu_profit_tabelle(kunde=kunde,
+                                  tankstelle_A=tankstelle_A,
+                                  tankstelle_B=tankstelle_B,
+                                  tankstelle_C=tankstelle_C,
+                                  verbose=False)[0]
+        tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
+
+        # Tankstelle B optimiert
+        tabelle_B = preis_zu_profit_tabelle(kunde=kunde,
+                                  tankstelle_A=tankstelle_A,
+                                  tankstelle_B=tankstelle_B,
+                                  tankstelle_C=tankstelle_C, 
+                                  verbose=False)[1]
+        tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
+
+        # Tankstelle C optimiert
+        tabelle_C = preis_zu_profit_tabelle(kunde=kunde,
+                                  tankstelle_A=tankstelle_A,
+                                  tankstelle_B=tankstelle_B,
+                                  tankstelle_C=tankstelle_C, 
+                                  verbose=False)[2]
+        tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
+        if verbose == True:
+            print("=== DURCHLAUF : ", i, "===")
+            print("Verkaufspreis Tankstelle A: ", tabelle_A.index(max(tabelle_A)))
+            print("Verkaufspreis Tankstelle B: ", tabelle_B.index(max(tabelle_B)))  
+            print("Verkaufspreis Tankstelle C: ", tabelle_C.index(max(tabelle_C))) 

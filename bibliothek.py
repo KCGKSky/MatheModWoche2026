@@ -304,7 +304,7 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
 
     return tabelle_A, tabelle_B, tabelle_C
 
-def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = False):
+def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = True):
     """
     Berechnet so lange die optimalen Verkaufspreise für die Tankstellen, bis sich eine Konstellation wiederholt. Gibt die Konstellation zurück, die sich wiederholt.
     """
@@ -388,8 +388,8 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
         if start is not None:
             loop = konstellationen[start:]
             if len(loop) == 2:
-                print("=== STABILER ZUSTAND ERREICHT ===")
-                print("Konstellation ",
+                if verbose == True : print("=== STABILER ZUSTAND ERREICHT ===")
+                if verbose == True : print("Konstellation ",
                       loop[0][0],
                       ": A = ",
                       loop[0][1],
@@ -399,7 +399,7 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                       loop[0][3])
                 return loop[0][1:]  # remove the Durchlauf number and return only the prices
             else:
-                print("=== LOOP ERREICHT ===")
+                if verbose == True : print("=== LOOP ERREICHT ===")
                 if verbose == True:
                     for konstellation in loop:
                         print(
@@ -417,11 +417,12 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                     werte = [konstellation[tankstelle] for konstellation in loop]
                     preisbereiche.append(min(werte))
                     preisbereiche.append(max(werte))
-                print("=== PREISRANGE IM LOOP ===")
-                print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
-                print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
-                print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
-                print("Loop-Länge: ", len(loop)-1)
-                print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
-                print(loop[0][1:])
+                if verbose == True : 
+                    print("=== PREISRANGE IM LOOP ===")
+                    print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
+                    print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
+                    print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
+                    print("Loop-Länge: ", len(loop)-1)
+                    print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
+                    print(loop[0][1:])
                 return loop[0][1:] # remove the Durchlauf number and return only the prices

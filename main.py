@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import bibliothek as bib
-import config
+import config as config
+import draw_utils as dr
 # from matplotlib.widgets import Slider
 
 verbose_value = config.verbose_value
@@ -53,13 +54,6 @@ tabelle = bib.preis_zu_profit_tabelle(kunden=kunden,
                                   verbose=False)
 
 
-plt.plot(tabelle[0], label="Tankstelle A")
-plt.plot(tabelle[1], label="Tankstelle B")
-plt.plot(tabelle[2], label="Tankstelle C")
-plt.xlabel("Preis pro Liter")
-plt.ylabel("Profit EURO")
-plt.legend()
-plt.grid(True)
-plt.show()
+dr.plot_profit_over_uhrzeit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24)
 
 bib.optimal_konstellation(20, kunden=kunden, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)

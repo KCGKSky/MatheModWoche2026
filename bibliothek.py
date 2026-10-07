@@ -51,7 +51,7 @@ class Kunde:
 
 
 class Tankstelle:
-    def __init__(self, preis_verkauf:int, preis_einkauf:float = 70, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
+    def __init__(self, preis_verkauf:int, preis_einkauf:float = 120, energie_steuer:int = 65, co_2_abgabe:float = 17, mehrwert_steuer:float=0.19):
         self.preis_verkauf = preis_verkauf # EUR/L
         self.preis_einkauf = preis_einkauf # cents
         self.energie_steuer = energie_steuer # cents
@@ -65,13 +65,13 @@ class Tankstelle:
         return verkaufs_preis_optimal
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
-    def profit_volumen(self, kundschaft:float=1, verkehr=1):
+    def gewinn_erwartung(self, kundschaft:float=1, verkehr=1):
         margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
         return 0.01 * config.tankvolumen * verkehr * kundschaft * margin
 
 
 
-def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
+def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
                              uhrzeit:int = 12, 
                              app_nutzer_anteil:float = 1.0,
                              verkehr = 1,
@@ -147,10 +147,10 @@ def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
     if np.abs(total_kundschaft - total_fluss) > 10**-7:
         print("something aint right")
 
-    # Calling the profit volume calculator for the customers
-    profit_volumen_A = tankstelle_A.profit_volumen(kundschaft=kundschaft_A, verkehr=verkehr)
-    profit_volumen_B = tankstelle_B.profit_volumen(kundschaft=kundschaft_B, verkehr=verkehr)
-    profit_volumen_C = tankstelle_C.profit_volumen(kundschaft=kundschaft_C, verkehr=verkehr)
+    # Calling the gewinn_erwartung calculator for the customers
+    profit_volumen_A = tankstelle_A.gewinn_erwartung(kundschaft=kundschaft_A, verkehr=verkehr)
+    profit_volumen_B = tankstelle_B.gewinn_erwartung(kundschaft=kundschaft_B, verkehr=verkehr)
+    profit_volumen_C = tankstelle_C.gewinn_erwartung(kundschaft=kundschaft_C, verkehr=verkehr)
 
     if verbose == True:
         print("\n=== INFORMATION TANKSTELLE VERGLEICH ===")
@@ -188,6 +188,15 @@ def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
 
         print("=======")
 
+        print("Wechsler Fluss von A nach B: ", wechsel_A_nach_B)
+        print("Wechsler Fluss von A nach C: ", wechsel_A_nach_C)
+        print("Wechsler Fluss von B nach A: ", wechsel_B_nach_A)
+        print("Wechsler Fluss von B nach C: ", wechsel_B_nach_C)
+        print("Wechsler Fluss von C nach A: ", wechsel_C_nach_A)
+        print("Wechsler Fluss von C nach B: ", wechsel_C_nach_B)
+
+        print("=======")
+
         print("Kundschaft Gesamt: ", kundschaft_A + kundschaft_B + kundschaft_C)
         print("Kundschaft der Tankstelle A: ", kundschaft_A)
         print("Kundschaft der Tankstelle B: ", kundschaft_B)
@@ -202,3 +211,90 @@ def profit_volumen_auswerten(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
 
     # Returns a list of np.float profit_volumes
     return profit_volumen_A, profit_volumen_B, profit_volumen_C
+
+
+
+def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=0, preis_end=100, verbose=False):
+    # for Tankstelle A
+    tabelle_A = [0]*preis_end
+    preis_origin = tankstelle_A.preis_verkauf
+    for preis_sim in range(preis_start, preis_end, 1):
+        tankstelle_A.preis_verkauf = preis_sim
+        tabelle_A[preis_sim] = profit_volumen(kunde=kunde, 
+                             tankstelle_A=tankstelle_A,
+                             tankstelle_B=tankstelle_B,
+                             tankstelle_C=tankstelle_C,
+                             uhrzeit=12,
+                             verkehr=1,
+                             app_nutzer_anteil=1,
+                             abstand_AC=1,
+                             abstand_BC=1,
+                             abstand_AB=1,
+                             fluss_A=1,
+                             fluss_B=1,
+                             fluss_C=1,
+                             verbose=False
+                             )[0]
+         
+    tankstelle_A.preis_verkauf = preis_origin
+
+    # for Tankstelle B
+    tabelle_B = [0]*preis_end
+    preis_origin = tankstelle_B.preis_verkauf
+    for preis_sim in range(preis_start, preis_end, 1):
+        tankstelle_B.preis_verkauf = preis_sim
+        tabelle_B[preis_sim] = profit_volumen(kunde=kunde, 
+                             tankstelle_A=tankstelle_A,
+                             tankstelle_B=tankstelle_B,
+                             tankstelle_C=tankstelle_C,
+                             uhrzeit=12,
+                             verkehr=1,
+                             app_nutzer_anteil=1,
+                             abstand_AC=1,
+                             abstand_BC=1,
+                             abstand_AB=1,
+                             fluss_A=1,
+                             fluss_B=1,
+                             fluss_C=1,
+                             verbose=False
+                             )[1]
+         
+    tankstelle_B.preis_verkauf = preis_origin
+
+    # for Tankstelle C
+    tabelle_C = [0]*preis_end
+    preis_origin = tankstelle_B.preis_verkauf
+    for preis_sim in range(preis_start, preis_end, 1):
+        tankstelle_C.preis_verkauf = preis_sim
+        tabelle_C[preis_sim] = profit_volumen(kunde=kunde, 
+                             tankstelle_A=tankstelle_A,
+                             tankstelle_B=tankstelle_B,
+                             tankstelle_C=tankstelle_C,
+                             uhrzeit=12,
+                             verkehr=1,
+                             app_nutzer_anteil=1,
+                             abstand_AC=1,
+                             abstand_BC=1,
+                             abstand_AB=1,
+                             fluss_A=1,
+                             fluss_B=1,
+                             fluss_C=1,
+                             verbose=False
+                             )[2]
+         
+    tankstelle_C.preis_verkauf = preis_origin
+
+    if verbose == True:
+        print("Tankstelle[A] : Preis[Cent/L] : Profit[EUR/h] ")
+        for i in range(0, len(tabelle_A), 1):
+            print("Tankstelle A: ", i, tabelle_A[i])
+
+        print("Tankstelle[B] : Preis[Cent/L] : Profit[EUR/h] ")
+        for i in range(0, len(tabelle_B), 1):
+            print("Tankstelle B: ", i, tabelle_B[i])
+
+        print("Tankstelle[C] : Preis[Cent/L] : Profit[EUR/h] ")
+        for i in range(0, len(tabelle_C), 1):
+            print("Tankstelle C: ", i, tabelle_C[i])
+
+    return tabelle_A, tabelle_B, tabelle_C

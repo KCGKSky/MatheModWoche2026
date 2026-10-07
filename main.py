@@ -26,9 +26,9 @@ tankstelle_C = bib.Tankstelle(preis_verkauf=config.preis_start_C,
                               )
 
 kunden = [
-    bib.Kunde(wendepunkt=config.wendepunkt_vollzeit, tankvolumen=config.tankvolumen, quote = 0),
-    bib.Kunde(wendepunkt=config.wendepunkt_teilzeit, tankvolumen=config.tankvolumen, quote = 0),
-    bib.Kunde(wendepunkt=config.wendepunkt_unbeschaftigt, tankvolumen=config.tankvolumen, quote = 1)
+    bib.Kunde(wendepunkt=config.wendepunkt_vollzeit, quote=config.quote_vollzeit),
+    bib.Kunde(wendepunkt=config.wendepunkt_teilzeit, quote=config.quote_teilzeit),
+    bib.Kunde(wendepunkt=config.wendepunkt_unbeschaftigt, quote=config.quote_unbeschaftigt)
 ]
 
 
@@ -38,12 +38,29 @@ bib.profit_volumen(kunde=kunden[0],
                     tankstelle_C=tankstelle_C,
                     verbose=False
                     )
-"""
+
+print(bib.gesamt_profit_volumen(kunden=kunden,
+                    tankstelle_A=tankstelle_A,
+                    tankstelle_B=tankstelle_B,
+                    tankstelle_C=tankstelle_C,
+                    verbose=True
+                    ))
+
 tabelle = bib.preis_zu_profit_tabelle(kunden=kunden,
                                   tankstelle_A=tankstelle_A,
                                   tankstelle_B=tankstelle_B,
                                   tankstelle_C=tankstelle_C,
                                   verbose=True)
-"""
+
+
+
+plt.plot(tabelle[0], label="Tankstelle A")
+plt.plot(tabelle[1], label="Tankstelle B")
+plt.plot(tabelle[2], label="Tankstelle C")
+plt.xlabel("Preis pro Liter")
+plt.ylabel("Profit EURO")
+plt.legend()
+plt.grid(True)
+plt.show()
 
 bib.optimal_konstellation(simultan = False, kunden=kunden, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)

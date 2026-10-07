@@ -397,7 +397,7 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                       loop[0][2],
                       " C = ",
                       loop[0][3])
-                return loop[0]
+                return loop[0][1:]  # remove the Durchlauf number and return only the prices
             else:
                 print("=== LOOP ERREICHT ===")
                 if verbose == True:
@@ -423,4 +423,5 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                 print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
                 print("Loop-Länge: ", len(loop)-1)
                 print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
-                return loop
+                print(loop[0][1:])
+                return loop[0][1:] # remove the Durchlauf number and return only the prices

@@ -22,7 +22,11 @@ fluss_A = config.fluss_A
 fluss_B = config.fluss_B
 fluss_C = config.fluss_C
 
-kunde = bib.Kunde(wendepunkt=config.wendepunkt_vollzeit, tankvolumen=config.tankvolumen)
+kunden = [
+    bib.Kunde(wendepunkt=config.wendepunkt_vollzeit, tankvolumen=config.tankvolumen, quote= 1),
+    bib.Kunde(wendepunkt=config.wendepunkt_teilzeit, tankvolumen=config.tankvolumen, quote= 0),
+    bib.Kunde(wendepunkt=config.wendepunkt_unbeschaftigt, tankvolumen=config.tankvolumen, quote= 0)
+]
 
 preis_end = config.preis_end
 
@@ -30,12 +34,14 @@ preis_end = config.preis_end
     
 
 
-tabelle = bib.preis_zu_profit_tabelle(kunde=kunde,
+
+tabelle = bib.preis_zu_profit_tabelle(kunden=kunden,
                                   tankstelle_A=tankstelle_A,
                                   tankstelle_B=tankstelle_B,
                                   tankstelle_C=tankstelle_C,
-                                  preis_end=preis_end, 
-                                  verbose=False)
+                                  preis_end=preis_end,
+
+                                  verbose=True)
 
 
 print("Optimalpreis fur Tankstelle A:", tabelle[0].index(max(tabelle[0])))
@@ -44,7 +50,7 @@ print("Optimalpreis fur Tankstelle C:", tabelle[2].index(max(tabelle[2])))
 
 
 
-bib.profit_volumen(kunde=kunde, 
+bib.gesamt_profit_volumen(kunden=kunden,
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,

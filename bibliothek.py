@@ -5,13 +5,14 @@ class Kunde:
     """
     Modell fuer einen Kunden bei einer Tankstelle
     """
-    def __init__(self, wendepunkt:float=0, tankvolumen:int=60, fahrer_geschwindigkeit:int=30):
+    def __init__(self, wendepunkt:float=0, tankvolumen:int=60, fahrer_geschwindigkeit:int=30, quote:float = 0):
         # wendepunkt := Bereitschaftswert. Ein "Give a Fuck" Faktor. 
         # Je hoeher desto leichter wechseln die Autofahrer die Tankstelle bei Preisunterschieden
         # Einheit ist Ersparnis pro stunde in EUR/h
         self.wendepunkt = wendepunkt 
         self.tankvolumen = tankvolumen
         self.fahrer_geschwindigkeit = fahrer_geschwindigkeit
+        self.quote = quote
 
     def aktivierung(self, X, uhrzeit:float = 12):
         """
@@ -24,8 +25,8 @@ class Kunde:
             return 0
         if self.wendepunkt == 0:
             return 1
-        b = 1.046* self.wendepunkt * self.stress_funktion(uhrzeit)
-        anteil = (1 + (X/b) ** -a) ** -p
+        b = 1.046* self.wendepunkt #* self.stress_funktion(uhrzeit)
+        anteil = ((1 + (X/b) ** -a) ** -p)
         return anteil
 
     def ersparnis_pro_weg(self, Tankstelle_Start, Tankstelle_Ziel, abstand:int = 1):
@@ -58,12 +59,6 @@ class Tankstelle:
         self.co_2_abgabe = co_2_abgabe # cents
         self.mehrwert_steuer = mehrwert_steuer # anteil
 
-    #Optimale Preise fuer maximales profit_volumen()
-    def preis_anpassen(self):
-        # """ mogliche Parameter: Maximaler preissprung, Konkurrenz Tankstelle, aktivierungsfunktion der Kunden"""
-        verkaufs_preis_optimal = 1
-        return verkaufs_preis_optimal
-
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
     def gewinn_erwartung(self, kundschaft:float=1, verkehr=1):
         margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
@@ -80,13 +75,13 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
                              abstand_AC:float = 1,
                              fluss_A:float = 1,
                              fluss_B:float = 1,
-                             fluss_C:float = 1,
+                             fluss_C:float = 0,
                              verbose:bool = False
                              ):
     """
     Betrachtet die, oh wehe es ist fertig!
     """
-    
+
     if abstand_AB  == 0 or abstand_BC == 0 or abstand_AC == 0:
         print("Divison by Zero!!!")
         return 0, 0, 0
@@ -212,27 +207,61 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
     # Returns a list of np.float profit_volumes
     return profit_volumen_A, profit_volumen_B, profit_volumen_C
 
+def gesamt_profit_volumen(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
+                            uhrzeit:int = 12,
+                            app_nutzer_anteil:float = 1.0,
+                            verkehr = 1,
+                            abstand_AB:float = 1,
+                            abstand_BC:float = 1,
+                            abstand_AC:float = 1,
+                            fluss_A:float = 1,
+                            fluss_B:float = 1,
+                            fluss_C:float = 0,
+                            verbose:bool = False
+                            ):
+    """
+    Berechnet das Gesamtprofit-Volumen für eine Liste von Kunden.
+    """
+    gesamt = [0, 0, 0]  # [profit_A, profit_B, profit_C]
+    for kunde in kunden:
+        profit = profit_volumen(kunde=kunde,
+                                tankstelle_A=tankstelle_A,
+                                tankstelle_B=tankstelle_B,
+                                tankstelle_C=tankstelle_C,
+                                uhrzeit=uhrzeit,
+                                verkehr=verkehr*kunde.quote,
+                                app_nutzer_anteil=app_nutzer_anteil,
+                                abstand_AC=abstand_AC,
+                                abstand_BC=abstand_BC,
+                                abstand_AB=abstand_AB,
+                                fluss_A=fluss_A,
+                                fluss_B=fluss_B,
+                                fluss_C=fluss_C,
+                                verbose=verbose
+                                )
+        for i in range(3):
+            gesamt[i] += profit[i]  # Gewichtung nach Anzahl der Kunden
+    return gesamt
 
-
-def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=0, preis_end=100, verbose=False):
+def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=0, preis_end=100, verbose=False):
     # for Tankstelle A
     tabelle_A = [0]*preis_end
     preis_origin = tankstelle_A.preis_verkauf
     for preis_sim in range(preis_start, preis_end, 1):
         tankstelle_A.preis_verkauf = preis_sim
-        tabelle_A[preis_sim] = profit_volumen(kunde=kunde, 
+        tabelle_A[preis_sim] = gesamt_profit_volumen(kunden=kunden,
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
                              uhrzeit=12,
-                             verkehr=1,
+                             verkehr=config.verkehr,
                              app_nutzer_anteil=1,
                              abstand_AC=1,
                              abstand_BC=1,
                              abstand_AB=1,
                              fluss_A=1,
                              fluss_B=1,
-                             fluss_C=1,
+                             fluss_C=0,
                              verbose=False
                              )[0]
          
@@ -243,19 +272,19 @@ def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, pre
     preis_origin = tankstelle_B.preis_verkauf
     for preis_sim in range(preis_start, preis_end, 1):
         tankstelle_B.preis_verkauf = preis_sim
-        tabelle_B[preis_sim] = profit_volumen(kunde=kunde, 
+        tabelle_B[preis_sim] = gesamt_profit_volumen(kunden=kunden,
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
                              uhrzeit=12,
-                             verkehr=1,
+                             verkehr=config.verkehr,
                              app_nutzer_anteil=1,
                              abstand_AC=1,
                              abstand_BC=1,
                              abstand_AB=1,
                              fluss_A=1,
                              fluss_B=1,
-                             fluss_C=1,
+                             fluss_C=0,
                              verbose=False
                              )[1]
          
@@ -266,19 +295,19 @@ def preis_zu_profit_tabelle(kunde, tankstelle_A, tankstelle_B, tankstelle_C, pre
     preis_origin = tankstelle_B.preis_verkauf
     for preis_sim in range(preis_start, preis_end, 1):
         tankstelle_C.preis_verkauf = preis_sim
-        tabelle_C[preis_sim] = profit_volumen(kunde=kunde, 
+        tabelle_C[preis_sim] = gesamt_profit_volumen(kunden=kunden,
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
                              uhrzeit=12,
-                             verkehr=1,
+                             verkehr=config.verkehr,
                              app_nutzer_anteil=1,
                              abstand_AC=1,
                              abstand_BC=1,
                              abstand_AB=1,
                              fluss_A=1,
                              fluss_B=1,
-                             fluss_C=1,
+                             fluss_C=0,
                              verbose=False
                              )[2]
          

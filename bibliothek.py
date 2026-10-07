@@ -5,7 +5,7 @@ class Kunde:
     """
     Modell fuer einen Kunden bei einer Tankstelle
     """
-    def __init__(self, wendepunkt:float=0, tankvolumen:int=config.tankvolumen, fahrer_geschwindigkeit:int=config.fahrer_geschwindigkeit, quote:float = 0):
+    def __init__(self, wendepunkt:float=0,  quote:float = 0, tankvolumen:int=config.tankvolumen, fahrer_geschwindigkeit:int=config.fahrer_geschwindigkeit,):
         # wendepunkt := Bereitschaftswert. Ein "Give a Fuck" Faktor.
         # Je hoeher desto leichter wechseln die Autofahrer die Tankstelle bei Preisunterschieden
         # Einheit ist Ersparnis pro stunde in EUR/h
@@ -171,6 +171,8 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         print("Uhrzeit: ", uhrzeit)
         print("App Nutzer Anteil: ", app_nutzer_anteil)
         print("Verkehrteilnehmer:", verkehr)
+        print("Wendepunkt Kunde:", kunde.wendepunkt)
+        print("Quote Kunde:", kunde.quote)
 
         print("=======")
 
@@ -208,17 +210,17 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
     return profit_volumen_A, profit_volumen_B, profit_volumen_C
 
 def gesamt_profit_volumen(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
-                            uhrzeit:int = 12,
-                            app_nutzer_anteil:float = 1.0,
-                            verkehr = 1,
-                            abstand_AB:float = 1,
-                            abstand_BC:float = 1,
-                            abstand_AC:float = 1,
-                            fluss_A:float = 1,
-                            fluss_B:float = 1,
-                            fluss_C:float = 0,
-                            verbose:bool = False
-                            ):
+                            uhrzeit:int = config.uhrzeit,
+                            app_nutzer_anteil:float = config.app_nutzer_anteil,
+                            verkehr = config.verkehr,
+                            abstand_AB:float = config.abstand_AB,
+                            abstand_BC:float = config.abstand_BC,
+                            abstand_AC:float = config.abstand_AC,
+                            fluss_A:float = config.fluss_A,
+                            fluss_B:float = config.fluss_B,
+                            fluss_C:float = config.fluss_C,
+                            verbose:bool = config.verbose_value
+                                                         ):
     """
     Berechnet das Gesamtprofit-Volumen für eine Liste von Kunden.
     """
@@ -243,7 +245,7 @@ def gesamt_profit_volumen(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
             gesamt[i] += profit[i]  # Gewichtung nach Anzahl der Kunden
     return gesamt
 
-def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=0, preis_end=100, verbose=False):
+def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=config.preis_start, preis_end=config.preis_end, verbose=False):
     # for Tankstelle A
     tabelle_A = [0]*preis_end
     preis_origin = tankstelle_A.preis_verkauf
@@ -253,15 +255,6 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             uhrzeit=config.uhrzeit,
-                             verkehr=config.verkehr,
-                             app_nutzer_anteil=config.app_nutzer_anteil,
-                             abstand_AC=config.abstand_AC,
-                             abstand_BC=config.abstand_BC,
-                             abstand_AB=config.abstand_AB,
-                             fluss_A=config.fluss_A,
-                             fluss_B=config.fluss_B,
-                             fluss_C=config.fluss_C,
                              verbose=verbose
                              )[0]
          
@@ -276,15 +269,6 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             uhrzeit=config.uhrzeit,
-                             verkehr=config.verkehr,
-                             app_nutzer_anteil=config.app_nutzer_anteil,
-                             abstand_AC=config.abstand_AC,
-                             abstand_BC=config.abstand_BC,
-                             abstand_AB=config.abstand_AB,
-                             fluss_A=config.fluss_A,
-                             fluss_B=config.fluss_B,
-                             fluss_C=config.fluss_C,
                              verbose=verbose
                              )[1]
          
@@ -299,15 +283,6 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             uhrzeit=config.uhrzeit,
-                             verkehr=config.verkehr,
-                             app_nutzer_anteil=config.app_nutzer_anteil,
-                             abstand_AC=config.abstand_AC,
-                             abstand_BC=config.abstand_BC,
-                             abstand_AB=config.abstand_AB,
-                             fluss_A=config.fluss_A,
-                             fluss_B=config.fluss_B,
-                             fluss_C=config.fluss_C,
                              verbose=verbose
                              )[2]
          

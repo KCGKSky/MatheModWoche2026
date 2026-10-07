@@ -123,14 +123,14 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         wechsel_B_nach_C = 0.5 * aktivierung_BC * fluss_B * app_nutzer_anteil
 
     if aktivierung_CA > aktivierung_CB:
-        wechsel_C_nach_A = aktivierung_CA * fluss_C * app_nutzer_anteil
+        wechsel_C_nach_A = aktivierung_CA * fluss_C
         wechsel_C_nach_B = 0
     elif aktivierung_CA < aktivierung_CB:
         wechsel_C_nach_A = 0
-        wechsel_C_nach_B = aktivierung_CB * fluss_C * app_nutzer_anteil
+        wechsel_C_nach_B = aktivierung_CB * fluss_C
     else:
-        wechsel_C_nach_A = 0.5 * aktivierung_CA * fluss_C * app_nutzer_anteil
-        wechsel_C_nach_B = 0.5 * aktivierung_CB * fluss_C * app_nutzer_anteil
+        wechsel_C_nach_A = 0.5 * aktivierung_CA * fluss_C
+        wechsel_C_nach_B = 0.5 * aktivierung_CB * fluss_C
 
     # Berechnung der Kundschaft für jede Tankstelle
     kundschaft_A = fluss_A - wechsel_A_nach_B - wechsel_A_nach_C + wechsel_B_nach_A + wechsel_C_nach_A
@@ -246,7 +246,7 @@ def gesamt_profit_volumen(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
             gesamt[i] += profit[i]  # Gewichtung nach Anzahl der Kunden
     return gesamt
 
-def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=config.preis_start, preis_end=config.preis_end, verbose=False):
+def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, preis_start=config.preis_start, preis_end=config.preis_end, verbose=False, uhrzeit:int = config.uhrzeit):
     # for Tankstelle A
     tabelle_A = [0]*preis_end
     preis_origin = tankstelle_A.preis_verkauf
@@ -256,7 +256,8 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
-                             verbose=verbose
+                             verbose=verbose,
+                             uhrzeit=uhrzeit
                              )[0]
          
     tankstelle_A.preis_verkauf = preis_origin
@@ -270,6 +271,7 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
+                             uhrzeit=uhrzeit,
                              verbose=verbose
                              )[1]
          
@@ -284,6 +286,7 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
                              tankstelle_A=tankstelle_A,
                              tankstelle_B=tankstelle_B,
                              tankstelle_C=tankstelle_C,
+                             uhrzeit=uhrzeit,
                              verbose=verbose
                              )[2]
          
@@ -304,7 +307,7 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
 
     return tabelle_A, tabelle_B, tabelle_C
 
-def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = True):
+def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = True, uhrzeit:int = config.uhrzeit):
     """
     Berechnet so lange die optimalen Verkaufspreise für die Tankstellen, bis sich eine Konstellation wiederholt. Gibt die Konstellation zurück, die sich wiederholt.
     """
@@ -331,7 +334,8 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                                       tankstelle_A=tankstelle_A,
                                       tankstelle_B=tankstelle_B,
                                       tankstelle_C=tankstelle_C,
-                                      verbose=False)
+                                      verbose=False,
+                                      uhrzeit=uhrzeit)
             tabelle_A = tabelle[0]
             tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
             tabelle_B = tabelle[1]
@@ -343,7 +347,8 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                                       tankstelle_A=tankstelle_A,
                                       tankstelle_B=tankstelle_B,
                                       tankstelle_C=tankstelle_C,
-                                      verbose=False)[0]
+                                      verbose=False,
+                                      uhrzeit=uhrzeit)[0]
             tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
 
             # Tankstelle B optimiert
@@ -351,7 +356,8 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                                       tankstelle_A=tankstelle_A,
                                       tankstelle_B=tankstelle_B,
                                       tankstelle_C=tankstelle_C,
-                                      verbose=False)[1]
+                                      verbose=False,
+                                      uhrzeit=uhrzeit)[1]
             tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
 
             # Tankstelle C optimiert
@@ -359,7 +365,8 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                                       tankstelle_A=tankstelle_A,
                                       tankstelle_B=tankstelle_B,
                                       tankstelle_C=tankstelle_C,
-                                      verbose=False)[2]
+                                      verbose=False,
+                                      uhrzeit=uhrzeit)[2]
             tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
 
         aktuelle_preise = [

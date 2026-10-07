@@ -61,13 +61,13 @@ class Tankstelle:
         self.mehrwert_steuer = mehrwert_steuer # anteil
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
-    def gewinn_erwartung(self, kundschaft:float=1, tankvolumen=config.tankvolumen, verkehr=config.verkehr):
+    def gewinn_erwartung(self, kunde:Kunde, kundschaft:float=1, verkehr=config.verkehr):
         margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
-        return 0.01 * tankvolumen * verkehr * kundschaft * margin
+        return 0.01 * kunde.tankvolumen * verkehr * kundschaft * margin
 
 
 
-def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
+def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
                              uhrzeit:int = config.uhrzeit,
                              app_nutzer_anteil:float = config.app_nutzer_anteil,
                              verkehr = config.verkehr,
@@ -144,9 +144,9 @@ def profit_volumen(kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         print("something aint right")
 
     # Calling the gewinn_erwartung calculator for the customers
-    profit_volumen_A = tankstelle_A.gewinn_erwartung(kundschaft=kundschaft_A, verkehr=verkehr)
-    profit_volumen_B = tankstelle_B.gewinn_erwartung(kundschaft=kundschaft_B, verkehr=verkehr)
-    profit_volumen_C = tankstelle_C.gewinn_erwartung(kundschaft=kundschaft_C, verkehr=verkehr)
+    profit_volumen_A = tankstelle_A.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_A, verkehr=verkehr)
+    profit_volumen_B = tankstelle_B.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_B, verkehr=verkehr)
+    profit_volumen_C = tankstelle_C.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_C, verkehr=verkehr)
 
     if verbose == True:
         print("\n=== INFORMATION TANKSTELLE VERGLEICH ===")
@@ -304,39 +304,123 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
 
     return tabelle_A, tabelle_B, tabelle_C
 
-def optimal_konstellation(wiederholungen, kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value):
+def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = False):
+    """
+    Berechnet so lange die optimalen Verkaufspreise für die Tankstellen, bis sich eine Konstellation wiederholt. Gibt die Konstellation zurück, die sich wiederholt.
+    """
     if verbose == True:
         print("=== KONSTELLATION FINDEN ===")
         print("Startpreis: Verkaufspreis Tankstelle A: ", config.preis_start_A)
         print("Startpreis: Verkaufspreis Tankstelle B: ", config.preis_start_B)
         print("Startpreis: Verkaufspreis Tankstelle C: ", config.preis_start_C)
         print("")
-    for i in range(1, wiederholungen+1, 1):
+
+    konstellationen = [[
+        0,
+        tankstelle_A.preis_verkauf,
+        tankstelle_B.preis_verkauf,
+        tankstelle_C.preis_verkauf,
+    ]]
+    durchlauf = 0
+
+    while True:
+        durchlauf += 1
         # Tankstelle A optimiert
-        tabelle_A = preis_zu_profit_tabelle(kunden=kunden,
-                                  tankstelle_A=tankstelle_A,
-                                  tankstelle_B=tankstelle_B,
-                                  tankstelle_C=tankstelle_C,
-                                  verbose=False)[0]
-        tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
+        if simultan == True:
+            tabelle = preis_zu_profit_tabelle(kunden=kunden,
+                                      tankstelle_A=tankstelle_A,
+                                      tankstelle_B=tankstelle_B,
+                                      tankstelle_C=tankstelle_C,
+                                      verbose=False)
+            tabelle_A = tabelle[0]
+            tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
+            tabelle_B = tabelle[1]
+            tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
+            tabelle_C = tabelle[2]
+            tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
+        else:
+            tabelle_A = preis_zu_profit_tabelle(kunden=kunden,
+                                      tankstelle_A=tankstelle_A,
+                                      tankstelle_B=tankstelle_B,
+                                      tankstelle_C=tankstelle_C,
+                                      verbose=False)[0]
+            tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
 
-        # Tankstelle B optimiert
-        tabelle_B = preis_zu_profit_tabelle(kunden=kunden,
-                                  tankstelle_A=tankstelle_A,
-                                  tankstelle_B=tankstelle_B,
-                                  tankstelle_C=tankstelle_C,
-                                  verbose=False)[1]
-        tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
+            # Tankstelle B optimiert
+            tabelle_B = preis_zu_profit_tabelle(kunden=kunden,
+                                      tankstelle_A=tankstelle_A,
+                                      tankstelle_B=tankstelle_B,
+                                      tankstelle_C=tankstelle_C,
+                                      verbose=False)[1]
+            tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
 
-        # Tankstelle C optimiert
-        tabelle_C = preis_zu_profit_tabelle(kunden=kunden,
-                                  tankstelle_A=tankstelle_A,
-                                  tankstelle_B=tankstelle_B,
-                                  tankstelle_C=tankstelle_C,
-                                  verbose=False)[2]
-        tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
+            # Tankstelle C optimiert
+            tabelle_C = preis_zu_profit_tabelle(kunden=kunden,
+                                      tankstelle_A=tankstelle_A,
+                                      tankstelle_B=tankstelle_B,
+                                      tankstelle_C=tankstelle_C,
+                                      verbose=False)[2]
+            tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
+
+        aktuelle_preise = [
+            tankstelle_A.preis_verkauf,
+            tankstelle_B.preis_verkauf,
+            tankstelle_C.preis_verkauf,
+        ]
+        aktuelle_konstellation = [durchlauf, *aktuelle_preise]
+        konstellationen.append(aktuelle_konstellation)
+
         if verbose == True:
-            print("=== DURCHLAUF : ", i, "===")
+            print("=== DURCHLAUF : ", durchlauf, "===")
             print("Verkaufspreis Tankstelle A: ", tabelle_A.index(max(tabelle_A)))
             print("Verkaufspreis Tankstelle B: ", tabelle_B.index(max(tabelle_B)))
             print("Verkaufspreis Tankstelle C: ", tabelle_C.index(max(tabelle_C)))
+            print("Aktuelle Konstellation: ", aktuelle_konstellation)
+
+        start = next(
+            (
+                index
+                for index, konstellation in enumerate(konstellationen[:-1])
+                if konstellation[1:] == aktuelle_preise
+            ),
+            None,
+        )
+        if start is not None:
+            loop = konstellationen[start:]
+            if len(loop) == 2:
+                print("=== STABILER ZUSTAND ERREICHT ===")
+                print("Konstellation ",
+                      loop[0][0],
+                      ": A = ",
+                      loop[0][1],
+                      " B = ",
+                      loop[0][2],
+                      " C = ",
+                      loop[0][3])
+                return loop[0]
+            else:
+                print("=== LOOP ERREICHT ===")
+                if verbose == True:
+                    for konstellation in loop:
+                        print(
+                            "Konstellation ",
+                            konstellation[0],
+                            ": A = ",
+                            konstellation[1],
+                            " B = ",
+                            konstellation[2],
+                            " C = ",
+                            konstellation[3],
+                        )
+                preisbereiche = []
+                for tankstelle in range(1, 4):
+                    werte = [konstellation[tankstelle] for konstellation in loop]
+                    preisbereiche.append(min(werte))
+                    preisbereiche.append(max(werte))
+                print("=== PREISRANGE IM LOOP ===")
+                print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
+                print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
+                print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
+                print("Loop-Länge: ", len(loop)-1)
+                print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
+                return loop

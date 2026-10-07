@@ -50,5 +50,5 @@ wendepunkt_unbeschaftigt = 50   # EUR/h Einsparungsrate
 
 ### EVALUATION
 
-preis_start = 0 # Profit_optimum berechnung start
+preis_start = 100 # Profit_optimum berechnung start
 preis_end = 300 # Profit_optimum berechnung ende (Bis wohin schaut man nach)

@@ -49,14 +49,13 @@ print("Tankstelle A: ", a)
 print("Tankstelle B: ", b)
 print("Tankstelle C: ", c)
 
-input("WEITER mit Stress_fuktion_plot?: ")
-
+input("WEITER mit Graphiken?: ")
 dr.plot_stress_function(0, kunden)
-#dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-#dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-#dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
+dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
+dr.plot_preis_zu_profit(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, False)
+dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
+dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 
-bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=True)
 plt.show()
 
 

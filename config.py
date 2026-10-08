@@ -14,20 +14,20 @@ verkehr = 200 # Anzahl von Tanken pro Stunde
 ### TANKSTELLEN
 
 abstand_AB = 1
-abstand_BC = 7
+abstand_BC = 4
 abstand_AC = 5
 
-fluss_A = 0.5
-fluss_B = 0.5
-fluss_C = 0.0
+fluss_A = 0.45
+fluss_B = 0.45
+fluss_C = 0.1
 
 preis_start_A = 200 # Cent pro Liter
 preis_start_B = 200 # Cent pro Liter
 preis_start_C = 190 # Cent pro Liter
 
-preis_einkauf_A = 60 #Cent
-preis_einkauf_B = 60 #Cent
-preis_einkauf_C = 60 #Cent
+preis_einkauf_A = 110#Cent
+preis_einkauf_B = 110 #Cent
+preis_einkauf_C = 105 #Cent
 
 energie_steuer = 65 #Cent
 co_2_abgabe = 17 #Cent

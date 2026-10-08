@@ -70,7 +70,7 @@ def plot_profit_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstell
     # for Tankstelle A, B und C
     tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
     for sim in range(start_val, end_val, 1):
-        tankstelle_A.preis_verkauf, tankstelle_B.preis_verkauf, tankstelle_C.preis_verkauf = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit=sim)
+        tankstelle_A.preis_verkauf, tankstelle_B.preis_verkauf, tankstelle_C.preis_verkauf = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit_start=sim, uhrzeit_end=sim)
         tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.gesamt_profit_volumen(kunden=kunden,
                                  tankstelle_A=tankstelle_A,
                                  tankstelle_B=tankstelle_B,
@@ -154,6 +154,22 @@ def plot_preis_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle
     plt.title("Optimale Benzinpreise")
     plt.xlabel("Uhrzeit [h]")
     plt.ylabel("Benzinpreis [C/L]")
+    plt.legend()
+    plt.grid(True)
+
+def plot_konstellations_verlauf(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
+    konstellationen = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit_start=start_val, uhrzeit_end=end_val, verlauf=True)
+    konstellation_A = [konstellationen[i][1] for i in range(len(konstellationen))]
+    konstellation_B = [konstellationen[i][2] for i in range(len(konstellationen))]
+    konstellation_C = [konstellationen[i][3] for i in range(len(konstellationen))]
+    plt.figure(figure_i)
+    plt.plot(konstellation_A, label="Tankstelle A")
+    plt.plot(konstellation_B, label="Tankstelle B")
+    plt.plot(konstellation_C, label="Tankstelle C")
+
+    plt.title("Verlauf der optimalen Konstellation")
+    plt.xlabel("KonstellationsNr")
+    plt.ylabel("Preis [C/L]")
     plt.legend()
     plt.grid(True)
 

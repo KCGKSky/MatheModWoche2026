@@ -34,9 +34,9 @@ kunden = [
 
 #dr.plot_stress_function(0, kunden)
 #dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
+#dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
 #dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-
+dr.plot_konstellations_verlauf(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 24, 24, False)
 plt.show()
 
 

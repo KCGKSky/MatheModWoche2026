@@ -81,8 +81,9 @@ def plot_profit_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstell
 
 
 
-def plot_preis_zu_profit(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=False):
+def plot_preis_zu_profit(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit, verbose=False):
     tabelle = bib.preis_zu_profit_tabelle(kunden=kunden,
+                                          uhrzeit=uhrzeit,
                                   tankstelle_A=tankstelle_A,
                                   tankstelle_B=tankstelle_B,
                                   tankstelle_C=tankstelle_C,

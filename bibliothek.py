@@ -45,9 +45,15 @@ class Tankstelle:
         self.mehrwert_steuer = mehrwert_steuer # anteil
 
     # Funktion mit Margin, Einkaufspreis, Anteil an Kunden vom Pool
-    def gewinn_erwartung(self, kunde:Kunde, kundschaft:float=1, verkehr=config.verkehr):
+    def gewinn_erwartung(self, kunde:Kunde, kundschaft, uhrzeit):
+        # Kundschaft ist der Anteil der Kunden den die Tankstelle bekommt
         margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
-        return 0.01 * kunde.tankvolumen * verkehr * kundschaft * margin
+        return 0.01 * kunde.tankvolumen * self.verkehrvorkommen(config.verkehr, uhrzeit) * margin * kundschaft
+
+    def verkehrvorkommen(self, verkehr, uhrzeit):
+        # Tabelle mit Vorkommen over Stunde
+        verkehr_anteil = [0.01, 0.01, 0.01, 0.01, 0.01, 0.02, 0.03, 0.09, 0.10, 0.09, 0.09, 0.07, 0.07, 0.02, 0.02, 0.03, 0.03, 0.07, 0.07, 0.08, 0.02, 0.02, 0.02, 0.01] 
+        return verkehr_anteil[uhrzeit-1]  * verkehr
 
 
 
@@ -170,9 +176,9 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         print("something aint right")
 
     # Calling the gewinn_erwartung calculator for the customers
-    profit_volumen_A = tankstelle_A.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_A, verkehr=verkehr)
-    profit_volumen_B = tankstelle_B.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_B, verkehr=verkehr)
-    profit_volumen_C = tankstelle_C.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_C, verkehr=verkehr)
+    profit_volumen_A = tankstelle_A.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_A, uhrzeit=uhrzeit)
+    profit_volumen_B = tankstelle_B.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_B, uhrzeit=uhrzeit)
+    profit_volumen_C = tankstelle_C.gewinn_erwartung(kunde = kunde, kundschaft=kundschaft_C, uhrzeit=uhrzeit)
 
     if verbose == True:
         print("\n=== INFORMATION TANKSTELLE VERGLEICH ===")
@@ -204,6 +210,9 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         print("Uhrzeit: ", uhrzeit)
         print("App Nutzer Anteil: ", app_nutzer_anteil)
         print("Verkehrteilnehmer:", verkehr)
+
+        print("=======")
+
         print("Wendepunkt Kunde:", kunde.wendepunkt)
         print("Quote Kunde:", kunde.quote)
 

@@ -65,7 +65,7 @@ plt.show(block=False)
 input("WEITER mit Graphiken (dauert circa 30 Sekunden)?: ")
 
 dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
-dr.plot_preis_zu_profit(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, False)
+dr.plot_preis_zu_profit(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, config.uhrzeit, False)
 dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 bib.profit_volumen(kunde=kunden[0], tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=True)

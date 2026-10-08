@@ -65,6 +65,6 @@ wendepunkt_unbeschaftigt = 50   # Wendepunkt der Kunden bei der Aktivierungsfunk
 preis_start = 0 # Der Startwert bei der Berechnung der Benzinpreistabelle zur Feststellung des Optimalen Profiterschlags
 preis_end = 300 # Der Startwert bei der Berechnung der Benzinpreistabelle zur Feststellung des Optimalen Profiterschlags (Sozusagen: "Bis wohin schaut man nach")
 
-zeit_fenster:int = 24    # Berechnet mit einem Zeitfenster vorausschauend in Stunden. #KEINE WERTE UNTER 1
+zeit_fenster:int = 1    # Berechnet mit einem Zeitfenster vorausschauend in Stunden. #KEINE WERTE UNTER 1
                         # bei   zeit_fenster = 24     wird der Preis fur den gesamten Tag optimiert. (SEHR RECHENINTENSIV, d.h Kaffeepause einplanen)
                         # bei   zeit_fenster = 1      wird der Preis jede Stunde aufs Optimum eingependelt.

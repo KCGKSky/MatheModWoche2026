@@ -12,7 +12,7 @@
 
 verbose_value = False       # Mehr debug Information in der Console anzeigen
 uhrzeit:int = 12            # Uhrzeit der Simulation, 0-24 h. Von der Uhrzeit hangt der Stresswert der Kunden ab, was widerum ihre Entscheidung zu wechseln (Aktivierung) beeinflusst.
-app_nutzer_anteil = 1.0     # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen. 
+app_nutzer_anteil = 0.5     # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen.
                             # Die App erlaubt es von Tankstele C zu A oder B zu wechseln oder umgekehrt. Fur Wechselvorgange zwischen A und B ist dieser Wert irrelevant
 
 verkehr = 1000              # Anzahl von Tankvorgangen am Tag an ALLEN TANKSTELLEN ZUSAMMEN! [Tankvorgang/Tag]
@@ -55,9 +55,9 @@ quote_teilzeit = 0.3        # Verteilung der Kundschaft auf die Normalströmung.
 quote_unbeschaftigt = 0.3   # Verteilung der Kundschaft auf die Normalströmung. Alle Quoten mussen zusammen 1 ergeben.
 
 
-wendepunkt_vollzeit= 100        # Wendepunkt der Kunden bei der Aktivierungsfunktion. Sozusagen "50% der Kunden wechseln die Tankstelle bei einer Einsparungsrate von X [EUR/Stunde]"
-wendepunkt_teilzeit = 75        # Wendepunkt der Kunden bei der Aktivierungsfunktion. Sozusagen "50% der Kunden wechseln die Tankstelle bei einer Einsparungsrate von X [EUR/Stunde]" 
-wendepunkt_unbeschaftigt = 50   # Wendepunkt der Kunden bei der Aktivierungsfunktion. Sozusagen "50% der Kunden wechseln die Tankstelle bei einer Einsparungsrate von X [EUR/Stunde]" 
+wendepunkt_vollzeit= 60         # Wendepunkt der Kunden bei der Aktivierungsfunktion. Sozusagen "50% der Kunden wechseln die Tankstelle bei einer Einsparungsrate von X [EUR/Stunde]"
+wendepunkt_teilzeit = 45        # Wendepunkt der Kunden bei der Aktivierungsfunktion. Sozusagen "50% der Kunden wechseln die Tankstelle bei einer Einsparungsrate von X [EUR/Stunde]"
+wendepunkt_unbeschaftigt = 30   # Wendepunkt der Kunden bei der Aktivierungsfunktion. Sozusagen "50% der Kunden wechseln die Tankstelle bei einer Einsparungsrate von X [EUR/Stunde]"
 
 
 ### EVALUATION SETTINGS (nicht relevant) ###
@@ -65,6 +65,6 @@ wendepunkt_unbeschaftigt = 50   # Wendepunkt der Kunden bei der Aktivierungsfunk
 preis_start = 0 # Der Startwert bei der Berechnung der Benzinpreistabelle zur Feststellung des Optimalen Profiterschlags
 preis_end = 300 # Der Startwert bei der Berechnung der Benzinpreistabelle zur Feststellung des Optimalen Profiterschlags (Sozusagen: "Bis wohin schaut man nach")
 
-zeit_fenster:int = 24    # Berechnet mit einem Zeitfenster vorausschauend in Stunden. #KEINE WERTE UNTER 1
+zeit_fenster:int = 1    # Berechnet mit einem Zeitfenster vorausschauend in Stunden. #KEINE WERTE UNTER 1
                         # bei   zeit_fenster = 24     wird der Preis fur den gesamten Tag optimiert. (SEHR RECHENINTENSIV, d.h Kaffeepause einplanen)
                         # bei   zeit_fenster = 1      wird der Preis jede Stunde aufs Optimum eingependelt.

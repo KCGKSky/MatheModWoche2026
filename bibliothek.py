@@ -33,7 +33,7 @@ class Kunde:
         return 0.01 * ( self.tankvolumen * (Tankstelle_Start.preis_verkauf - Tankstelle_Ziel.preis_verkauf) ) / ( abstand / self.fahrer_geschwindigkeit ) # EUR/h
     
     def stress_funktion(self, uhrzeit:int=config.uhrzeit):
-        return 1.533087 - 0.004569 * np.cos(np.pi*uhrzeit/12) + 0.227296 * np.sin(np.pi*uhrzeit/12) - 0.083494 * np.cos(np.pi*uhrzeit/6) + 0.163494 * np.sin(np.pi*uhrzeit/6) + 0.023972 * np.cos(np.pi*uhrzeit/4) - 0.476762 * np.sin(np.pi*uhrzeit/4)
+        return 1 + ( - 0.004569 * np.cos(np.pi*uhrzeit/12) + 0.227296 * np.sin(np.pi*uhrzeit/12) - 0.083494 * np.cos(np.pi*uhrzeit/6) + 0.163494 * np.sin(np.pi*uhrzeit/6) + 0.023972 * np.cos(np.pi*uhrzeit/4) - 0.476762 * np.sin(np.pi*uhrzeit/4)) / 1.2
 
 
 class Tankstelle:

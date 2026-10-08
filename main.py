@@ -59,10 +59,10 @@ print("=== Eingependelte Benzinpreise ===")
 print("Tankstelle A: ", a)
 print("Tankstelle B: ", b)
 print("Tankstelle C: ", c)
-dr.plot_konstellations_verlauf(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 24, 24, False)
+dr.plot_konstellations_verlauf(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 25-config.zeit_fenster, 24, False)
 plt.show(block=False)
 
-input("WEITER mit Graphiken(Dauert circa 20 Sekunden)?: ")
+input("WEITER mit Graphiken (dauert circa 30 Sekunden)?: ")
 
 dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 dr.plot_preis_zu_profit(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, False)

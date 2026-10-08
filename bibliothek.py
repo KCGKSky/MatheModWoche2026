@@ -86,32 +86,74 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
     aktivierung_CB = kunde.aktivierung(X=ersparnis_CB, uhrzeit=uhrzeit)
 
     # Berechnung der Wechselwahrscheinlichkeiten, avoids total values over 
-    if aktivierung_AB > aktivierung_AC:
+    if ersparnis_AB > ersparnis_AC:
         wechsel_A_nach_B = aktivierung_AB * fluss_A
         wechsel_A_nach_C = 0
-    elif aktivierung_AB < aktivierung_AC:
+        if tankstelle_C.preis_verkauf < tankstelle_B.preis_verkauf:
+            ersparnis_A_BC = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_B, Tankstelle_Ziel=tankstelle_C,
+                                                     abstand=abstand_AC - abstand_AB)
+            aktivierung_A_BC = kunde.aktivierung(X=ersparnis_A_BC, uhrzeit=uhrzeit)
+            wechsel_BC = aktivierung_A_BC * fluss_A * app_nutzer_anteil
+            wechsel_A_nach_B -= wechsel_BC
+            wechsel_A_nach_C += wechsel_BC
+    elif ersparnis_AB < ersparnis_AC:
         wechsel_A_nach_B = aktivierung_AB * fluss_A * (1 - app_nutzer_anteil)
         wechsel_A_nach_C = aktivierung_AC * fluss_A * app_nutzer_anteil
+        if tankstelle_B.preis_verkauf < tankstelle_C.preis_verkauf:
+            ersparnis_A_CB = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_C, Tankstelle_Ziel=tankstelle_B,
+                                                     abstand=abstand_AB - abstand_AC)
+            aktivierung_A_CB = kunde.aktivierung(X=ersparnis_A_CB, uhrzeit=uhrzeit)
+            wechsel_CB = aktivierung_A_CB * fluss_A * app_nutzer_anteil
+            wechsel_A_nach_C -= wechsel_CB
+            wechsel_A_nach_B += wechsel_CB
     else:
         wechsel_A_nach_B = 0.5 * aktivierung_AB * fluss_A * app_nutzer_anteil + aktivierung_AB * fluss_A * (1 - app_nutzer_anteil)
         wechsel_A_nach_C = 0.5 * aktivierung_AC * fluss_A * app_nutzer_anteil
 
-    if aktivierung_BA > aktivierung_BC:
+    if ersparnis_BA > ersparnis_BC:
         wechsel_B_nach_A = aktivierung_BA * fluss_B
         wechsel_B_nach_C = 0
-    elif aktivierung_BA < aktivierung_BC:
+        if tankstelle_C.preis_verkauf < tankstelle_A.preis_verkauf:
+            ersparnis_B_AC = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_A, Tankstelle_Ziel=tankstelle_C,
+                                                     abstand=abstand_BC - abstand_AB)
+            aktivierung_B_AC = kunde.aktivierung(X=ersparnis_B_AC, uhrzeit=uhrzeit)
+            wechsel_AC = aktivierung_B_AC * fluss_B * app_nutzer_anteil
+            wechsel_B_nach_A -= wechsel_AC
+            wechsel_B_nach_C += wechsel_AC
+    elif ersparnis_BA < ersparnis_BC:
         wechsel_B_nach_A = aktivierung_BA * fluss_B * (1 - app_nutzer_anteil)
         wechsel_B_nach_C = aktivierung_BC * fluss_B * app_nutzer_anteil
+        if tankstelle_A.preis_verkauf < tankstelle_C.preis_verkauf:
+            ersparnis_B_CA = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_C, Tankstelle_Ziel=tankstelle_A,
+                                                     abstand=abstand_AB - abstand_BC)
+            aktivierung_B_CA = kunde.aktivierung(X=ersparnis_B_CA, uhrzeit=uhrzeit)
+            wechsel_CA = aktivierung_B_CA * fluss_B * app_nutzer_anteil
+            wechsel_B_nach_C -= wechsel_CA
+            wechsel_B_nach_A += wechsel_CA
     else:
         wechsel_B_nach_A = 0.5 * aktivierung_BA * fluss_B * app_nutzer_anteil + aktivierung_BA * fluss_B * (1 - app_nutzer_anteil)
         wechsel_B_nach_C = 0.5 * aktivierung_BC * fluss_B * app_nutzer_anteil
 
-    if aktivierung_CA > aktivierung_CB:
+    if ersparnis_CA > ersparnis_CB:
         wechsel_C_nach_A = aktivierung_CA * fluss_C
         wechsel_C_nach_B = 0
-    elif aktivierung_CA < aktivierung_CB:
+        if tankstelle_B.preis_verkauf < tankstelle_A.preis_verkauf:
+            ersparnis_C_AB = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_A, Tankstelle_Ziel=tankstelle_B,
+                                                     abstand=abstand_BC - abstand_AC)
+            aktivierung_C_AB = kunde.aktivierung(X=ersparnis_C_AB, uhrzeit=uhrzeit)
+            wechsel_AB = aktivierung_C_AB * fluss_C
+            wechsel_C_nach_A -= wechsel_AB
+            wechsel_C_nach_B += wechsel_AB
+    elif ersparnis_CA < ersparnis_CB:
         wechsel_C_nach_A = 0
         wechsel_C_nach_B = aktivierung_CB * fluss_C
+        if tankstelle_A.preis_verkauf < tankstelle_B.preis_verkauf:
+            ersparnis_C_BA = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_B, Tankstelle_Ziel=tankstelle_A,
+                                                     abstand=abstand_AC - abstand_BC)
+            aktivierung_C_BA = kunde.aktivierung(X=ersparnis_C_BA, uhrzeit=uhrzeit)
+            wechsel_BA = aktivierung_C_BA * fluss_C
+            wechsel_C_nach_B -= wechsel_BA
+            wechsel_C_nach_A += wechsel_BA
     else:
         wechsel_C_nach_A = 0.5 * aktivierung_CA * fluss_C
         wechsel_C_nach_B = 0.5 * aktivierung_CB * fluss_C
@@ -291,7 +333,7 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
 
     return tabelle_A, tabelle_B, tabelle_C
 
-def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = True, uhrzeit:int = config.uhrzeit):
+def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = False, uhrzeit_start:int = config.uhrzeit, uhrzeit_end:int = config.uhrzeit):
     """
     Berechnet so lange die optimalen Verkaufspreise für die Tankstellen, bis sich eine Konstellation wiederholt. Gibt die Konstellation zurück, die sich wiederholt.
     """
@@ -311,109 +353,108 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
     durchlauf = 0
 
     while True:
-        durchlauf += 1
-        # Tankstelle A optimiert
-        if simultan == True:
-            tabelle = preis_zu_profit_tabelle(kunden=kunden,
-                                      tankstelle_A=tankstelle_A,
-                                      tankstelle_B=tankstelle_B,
-                                      tankstelle_C=tankstelle_C,
-                                      verbose=False,
-                                      uhrzeit=uhrzeit)
-            tabelle_A = tabelle[0]
-            tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
-            tabelle_B = tabelle[1]
-            tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
-            tabelle_C = tabelle[2]
-            tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
-        else:
-            tabelle_A = preis_zu_profit_tabelle(kunden=kunden,
-                                      tankstelle_A=tankstelle_A,
-                                      tankstelle_B=tankstelle_B,
-                                      tankstelle_C=tankstelle_C,
-                                      verbose=False,
-                                      uhrzeit=uhrzeit)[0]
-            tankstelle_A.preis_verkauf = tabelle_A.index(max(tabelle_A))
+         durchlauf += 1
+         if simultan:
+             tabelle = np.array([0] * config.preis_end)
+             tabelle = np.array([tabelle, tabelle.copy(), tabelle.copy()])
+             for i in range(uhrzeit_start, uhrzeit_end + 1, 1):
+                 result = preis_zu_profit_tabelle(kunden=kunden,
+                                       tankstelle_A=tankstelle_A,
+                                       tankstelle_B=tankstelle_B,
+                                       tankstelle_C=tankstelle_C,
+                                       verbose=False,
+                                       uhrzeit=i)
+                 tabelle[0] = np.array(tabelle[0]) + np.array(result[0])
+                 tabelle[1] = np.array(tabelle[1]) + np.array(result[1])
+                 tabelle[2] = np.array(tabelle[2]) + np.array(result[2])
+             tabelle_A = tabelle[0]
+             tabelle_B = tabelle[1]
+             tabelle_C = tabelle[2]
+         else:
+             # Tankstelle A optimiert - für alle Uhrzeiten von uhrzeit_start bis uhrzeit_end
+             tabelle_A = np.array([0] * config.preis_end)
+             tabelle_B = np.array([0] * config.preis_end)
+             tabelle_C = np.array([0] * config.preis_end)
+             for i in range(uhrzeit_start, uhrzeit_end+1, 1):
+                 for j in range(3):
+                     result = preis_zu_profit_tabelle(kunden=kunden,
+                                           tankstelle_A=tankstelle_A,
+                                           tankstelle_B=tankstelle_B,
+                                           tankstelle_C=tankstelle_C,
+                                           verbose=False,
+                                           uhrzeit=i)[j]
+                     if j == 0:
+                         tabelle_A = np.array(tabelle_A) + np.array(result)
+                     elif j == 1:
+                         tabelle_B = np.array(tabelle_B) + np.array(result)
+                     else:
+                         tabelle_C = np.array(tabelle_C) + np.array(result)
 
-            # Tankstelle B optimiert
-            tabelle_B = preis_zu_profit_tabelle(kunden=kunden,
-                                      tankstelle_A=tankstelle_A,
-                                      tankstelle_B=tankstelle_B,
-                                      tankstelle_C=tankstelle_C,
-                                      verbose=False,
-                                      uhrzeit=uhrzeit)[1]
-            tankstelle_B.preis_verkauf = tabelle_B.index(max(tabelle_B))
+         tankstelle_A.preis_verkauf = int(np.argmax(tabelle_A))
+         tankstelle_B.preis_verkauf = int(np.argmax(tabelle_B))
+         tankstelle_C.preis_verkauf = int(np.argmax(tabelle_C))
 
-            # Tankstelle C optimiert
-            tabelle_C = preis_zu_profit_tabelle(kunden=kunden,
-                                      tankstelle_A=tankstelle_A,
-                                      tankstelle_B=tankstelle_B,
-                                      tankstelle_C=tankstelle_C,
-                                      verbose=False,
-                                      uhrzeit=uhrzeit)[2]
-            tankstelle_C.preis_verkauf = tabelle_C.index(max(tabelle_C))
+         aktuelle_preise = [
+             tankstelle_A.preis_verkauf,
+             tankstelle_B.preis_verkauf,
+             tankstelle_C.preis_verkauf,
+         ]
+         aktuelle_konstellation = [durchlauf, *aktuelle_preise]
+         konstellationen.append(aktuelle_konstellation)
 
-        aktuelle_preise = [
-            tankstelle_A.preis_verkauf,
-            tankstelle_B.preis_verkauf,
-            tankstelle_C.preis_verkauf,
-        ]
-        aktuelle_konstellation = [durchlauf, *aktuelle_preise]
-        konstellationen.append(aktuelle_konstellation)
+         if verbose == True:
+             print("=== DURCHLAUF : ", durchlauf, "===")
+             print("Verkaufspreis Tankstelle A: ", int(np.argmax(tabelle_A)))
+             print("Verkaufspreis Tankstelle B: ", int(np.argmax(tabelle_B)))
+             print("Verkaufspreis Tankstelle C: ", int(np.argmax(tabelle_C)))
+             print("Aktuelle Konstellation: ", aktuelle_konstellation)
 
-        if verbose == True:
-            print("=== DURCHLAUF : ", durchlauf, "===")
-            print("Verkaufspreis Tankstelle A: ", tabelle_A.index(max(tabelle_A)))
-            print("Verkaufspreis Tankstelle B: ", tabelle_B.index(max(tabelle_B)))
-            print("Verkaufspreis Tankstelle C: ", tabelle_C.index(max(tabelle_C)))
-            print("Aktuelle Konstellation: ", aktuelle_konstellation)
-
-        start = next(
-            (
-                index
-                for index, konstellation in enumerate(konstellationen[:-1])
-                if konstellation[1:] == aktuelle_preise
-            ),
-            None,
-        )
-        if start is not None:
-            loop = konstellationen[start:]
-            if len(loop) == 2:
-                if verbose == True : print("=== STABILER ZUSTAND ERREICHT ===")
-                if verbose == True : print("Konstellation ",
-                      loop[0][0],
-                      ": A = ",
-                      loop[0][1],
-                      " B = ",
-                      loop[0][2],
-                      " C = ",
-                      loop[0][3])
-                return loop[0][1:]  # remove the Durchlauf number and return only the prices
-            else:
-                if verbose == True : print("=== LOOP ERREICHT ===")
-                if verbose == True:
-                    for konstellation in loop:
-                        print(
-                            "Konstellation ",
-                            konstellation[0],
-                            ": A = ",
-                            konstellation[1],
-                            " B = ",
-                            konstellation[2],
-                            " C = ",
-                            konstellation[3],
-                        )
-                preisbereiche = []
-                for tankstelle in range(1, 4):
-                    werte = [konstellation[tankstelle] for konstellation in loop]
-                    preisbereiche.append(min(werte))
-                    preisbereiche.append(max(werte))
-                if verbose == True : 
-                    print("=== PREISRANGE IM LOOP ===")
-                    print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
-                    print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
-                    print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
-                    print("Loop-Länge: ", len(loop)-1)
-                    print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
-                    print(loop[0][1:])
-                return loop[0][1:] # remove the Durchlauf number and return only the prices
+         start = next(
+             (
+                 index
+                 for index, konstellation in enumerate(konstellationen[:-1])
+                 if konstellation[1:] == aktuelle_preise
+             ),
+             None,
+         )
+         if start is not None:
+             loop = konstellationen[start:]
+             if len(loop) == 2:
+                 if verbose == True : print("=== STABILER ZUSTAND ERREICHT ===")
+                 if verbose == True : print("Konstellation ",
+                       loop[0][0],
+                       ": A = ",
+                       loop[0][1],
+                       " B = ",
+                       loop[0][2],
+                       " C = ",
+                       loop[0][3])
+                 return loop[0][1:]  # remove the Durchlauf number and return only the prices
+             else:
+                 if verbose == True : print("=== LOOP ERREICHT ===")
+                 if verbose == True:
+                     for konstellation in loop:
+                         print(
+                             "Konstellation ",
+                             konstellation[0],
+                             ": A = ",
+                             konstellation[1],
+                             " B = ",
+                             konstellation[2],
+                             " C = ",
+                             konstellation[3],
+                         )
+                 preisbereiche = []
+                 for tankstelle in range(1, 4):
+                     werte = [konstellation[tankstelle] for konstellation in loop]
+                     preisbereiche.append(min(werte))
+                     preisbereiche.append(max(werte))
+                 if verbose == True :
+                     print("=== PREISRANGE IM LOOP ===")
+                     print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
+                     print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
+                     print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
+                     print("Loop-Länge: ", len(loop)-1)
+                     print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
+                     print(loop[0][1:])
+                 return loop[0][1:] # remove the Durchlauf number and return only the prices

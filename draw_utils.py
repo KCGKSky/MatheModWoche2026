@@ -154,21 +154,21 @@ def plot_konstellations_verlauf(figure_i, kunden, tankstelle_A, tankstelle_B, ta
     plt.grid(True)
 
 
-def plot_aktivierung(figure_i, kunden, end_val, uhrzeit=config.uhrzeit):
+def plot_aktivierung(figure_i, kunden, end_val, stress = 1):
     x = range(end_val)
     
     aktivierung_A, aktivierung_B, aktivierung_C = [0]*end_val, [0]*end_val, [0]*end_val
     for i in x:
-        aktivierung_A[i] = kunden[0].aktivierung(i, uhrzeit)
-        aktivierung_B[i] = kunden[1].aktivierung(i, uhrzeit)
-        aktivierung_C[i] = kunden[2].aktivierung(i, uhrzeit)
+        aktivierung_A[i] = kunden[0].aktivierung(i, stress)
+        aktivierung_B[i] = kunden[1].aktivierung(i, stress)
+        aktivierung_C[i] = kunden[2].aktivierung(i, stress)
 
     plt.figure(figure_i)
-    plt.plot(aktivierung_A, label="Aktivierungsfunktion Vollzeit")
+    plt.plot(aktivierung_A, label="Aktivierungsfunktion Vollzeit ")
     plt.plot(aktivierung_B, label="Aktivierungsfunktion Teilzeit")
     plt.plot(aktivierung_C, label="Aktivierungsfunktion Unbeschaftigt")
 
-    plt.title("Aktivierung der Kunden")
+    plt.title("Aktivierung der Kunden / Stress = " + str(stress))
     plt.xlabel("Ersparnis pro Zeit [EUR/h]")
     plt.ylabel("Anteil der Aktivierten")
     plt.legend()
@@ -189,5 +189,14 @@ def plot_einkommensverteilung(figure_i, end_val):
     plt.ylabel("Prozent Bevolkerung")
     
 
-#y = eingependelte_preise = bib.optimal_konstellation(80, kunde=kunde, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)
-#x = np.arange(0, 24, 0.1)
+def plot_verkehrs_vorkommen(figure_i):
+    x = range(0, 24)
+    verkehr_vorkommen_tabelle = [0]*24
+    for i in x:
+        verkehr_vorkommen_tabelle[i] = bib.verkehrs_vorkommen(i)
+        
+    plt.figure(figure_i)
+    plt.plot(verkehr_vorkommen_tabelle, label="Verkehrs_vorkommen")
+    plt.title("Durchschnitt der Tankvorgange")
+    plt.xlabel("Uhrzeit [h]")
+    plt.ylabel("Anteil der Tankvorgange")

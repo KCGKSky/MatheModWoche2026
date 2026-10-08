@@ -35,11 +35,12 @@ kunden = [
 ### PRESENTATION START
 print("=== PROGRAMM START ===")
 dr.plot_einkommensverteilung(5, 200000)
-dr.plot_aktivierung(6, kunden, 500)
+dr.plot_aktivierung(6, kunden, 250)
 plt.show(block=False)
 input("WEITER Mit Stress_funktion? : ")
 
 dr.plot_stress_function(0, kunden)
+dr.plot_verkehrs_vorkommen(7)
 plt.show(block=False)
 input("WEITER Information Darstellung? : ")
 

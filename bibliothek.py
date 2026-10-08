@@ -14,7 +14,7 @@ class Kunde:
         self.fahrer_geschwindigkeit = fahrer_geschwindigkeit
         self.quote = quote
 
-    def aktivierung(self, X, uhrzeit:float = config.uhrzeit):
+    def aktivierung(self, X, stress):
         """
         Gibt den Anteil der Wechsler für einen Interessewert (Ersparnis pro weg)
         an. Funktion basiert auf der Einkommensverteilung in Deutschland
@@ -25,7 +25,7 @@ class Kunde:
             return 0
         if self.wendepunkt == 0:
             return 1
-        b = 1.046 * self.wendepunkt * self.stress_funktion(uhrzeit)
+        b = 1.046 * self.wendepunkt * stress
         anteil = (1 + (X/b) ** -a) ** -p
         return anteil
 
@@ -48,12 +48,13 @@ class Tankstelle:
     def gewinn_erwartung(self, kunde:Kunde, kundschaft, uhrzeit):
         # Kundschaft ist der Anteil der Kunden den die Tankstelle bekommt
         margin = (self.preis_verkauf - self.preis_einkauf)/(1+self.mehrwert_steuer) - self.co_2_abgabe - self.energie_steuer # cent pro Liter Gewinn
-        return 0.01 * kunde.tankvolumen * self.verkehrvorkommen(config.verkehr, uhrzeit) * margin * kundschaft
+        return 0.01 * kunde.tankvolumen * verkehrs_vorkommen(uhrzeit) * margin * kundschaft * config.verkehr
 
-    def verkehrvorkommen(self, verkehr, uhrzeit):
-        # Tabelle mit Vorkommen over Stunde
-        verkehr_anteil = [0.01, 0.01, 0.01, 0.01, 0.01, 0.02, 0.03, 0.09, 0.10, 0.09, 0.09, 0.07, 0.07, 0.02, 0.02, 0.03, 0.03, 0.07, 0.07, 0.08, 0.02, 0.02, 0.02, 0.01] 
-        return verkehr_anteil[uhrzeit-1]  * verkehr
+
+def verkehrs_vorkommen(uhrzeit):
+    # Tabelle mit Vorkommen over Stunde
+    verkehr_anteil = [0.01, 0.01, 0.01, 0.01, 0.01, 0.02, 0.03, 0.09, 0.10, 0.09, 0.09, 0.07, 0.07, 0.02, 0.02, 0.03, 0.03, 0.07, 0.07, 0.08, 0.02, 0.02, 0.02, 0.01] 
+    return verkehr_anteil[uhrzeit-1] 
 
 
 
@@ -84,12 +85,12 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
     ersparnis_CA = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_C, Tankstelle_Ziel=tankstelle_A, abstand=abstand_AC)
     ersparnis_CB = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_C, Tankstelle_Ziel=tankstelle_B, abstand=abstand_BC)
 
-    aktivierung_AB = kunde.aktivierung(X=ersparnis_AB, uhrzeit=uhrzeit)
-    aktivierung_BA = kunde.aktivierung(X=ersparnis_BA, uhrzeit=uhrzeit)
-    aktivierung_BC = kunde.aktivierung(X=ersparnis_BC, uhrzeit=uhrzeit)
-    aktivierung_AC = kunde.aktivierung(X=ersparnis_AC, uhrzeit=uhrzeit)
-    aktivierung_CA = kunde.aktivierung(X=ersparnis_CA, uhrzeit=uhrzeit)
-    aktivierung_CB = kunde.aktivierung(X=ersparnis_CB, uhrzeit=uhrzeit)
+    aktivierung_AB = kunde.aktivierung(X=ersparnis_AB, stress=kunde.stress_funktion(uhrzeit))
+    aktivierung_BA = kunde.aktivierung(X=ersparnis_BA, stress=kunde.stress_funktion(uhrzeit))
+    aktivierung_BC = kunde.aktivierung(X=ersparnis_BC, stress=kunde.stress_funktion(uhrzeit))
+    aktivierung_AC = kunde.aktivierung(X=ersparnis_AC, stress=kunde.stress_funktion(uhrzeit))
+    aktivierung_CA = kunde.aktivierung(X=ersparnis_CA, stress=kunde.stress_funktion(uhrzeit))
+    aktivierung_CB = kunde.aktivierung(X=ersparnis_CB, stress=kunde.stress_funktion(uhrzeit))
 
     # Berechnung der Wechselwahrscheinlichkeiten, avoids total values over 
     if ersparnis_AB > ersparnis_AC:
@@ -98,7 +99,7 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         if tankstelle_C.preis_verkauf < tankstelle_B.preis_verkauf:
             ersparnis_A_BC = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_B, Tankstelle_Ziel=tankstelle_C,
                                                      abstand=abstand_AC - abstand_AB)
-            aktivierung_A_BC = kunde.aktivierung(X=ersparnis_A_BC, uhrzeit=uhrzeit)
+            aktivierung_A_BC = kunde.aktivierung(X=ersparnis_A_BC, stress=kunde.stress_funktion(uhrzeit))
             wechsel_BC = aktivierung_A_BC * fluss_A * app_nutzer_anteil
             wechsel_A_nach_B -= wechsel_BC
             wechsel_A_nach_C += wechsel_BC
@@ -108,7 +109,7 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         if tankstelle_B.preis_verkauf < tankstelle_C.preis_verkauf:
             ersparnis_A_CB = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_C, Tankstelle_Ziel=tankstelle_B,
                                                      abstand=abstand_AB - abstand_AC)
-            aktivierung_A_CB = kunde.aktivierung(X=ersparnis_A_CB, uhrzeit=uhrzeit)
+            aktivierung_A_CB = kunde.aktivierung(X=ersparnis_A_CB, stress=kunde.stress_funktion(uhrzeit))
             wechsel_CB = aktivierung_A_CB * fluss_A * app_nutzer_anteil
             wechsel_A_nach_C -= wechsel_CB
             wechsel_A_nach_B += wechsel_CB
@@ -122,7 +123,7 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         if tankstelle_C.preis_verkauf < tankstelle_A.preis_verkauf:
             ersparnis_B_AC = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_A, Tankstelle_Ziel=tankstelle_C,
                                                      abstand=abstand_BC - abstand_AB)
-            aktivierung_B_AC = kunde.aktivierung(X=ersparnis_B_AC, uhrzeit=uhrzeit)
+            aktivierung_B_AC = kunde.aktivierung(X=ersparnis_B_AC, stress=kunde.stress_funktion(uhrzeit))
             wechsel_AC = aktivierung_B_AC * fluss_B * app_nutzer_anteil
             wechsel_B_nach_A -= wechsel_AC
             wechsel_B_nach_C += wechsel_AC
@@ -132,7 +133,7 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         if tankstelle_A.preis_verkauf < tankstelle_C.preis_verkauf:
             ersparnis_B_CA = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_C, Tankstelle_Ziel=tankstelle_A,
                                                      abstand=abstand_AB - abstand_BC)
-            aktivierung_B_CA = kunde.aktivierung(X=ersparnis_B_CA, uhrzeit=uhrzeit)
+            aktivierung_B_CA = kunde.aktivierung(X=ersparnis_B_CA, stress=kunde.stress_funktion(uhrzeit))
             wechsel_CA = aktivierung_B_CA * fluss_B * app_nutzer_anteil
             wechsel_B_nach_C -= wechsel_CA
             wechsel_B_nach_A += wechsel_CA
@@ -146,7 +147,7 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         if tankstelle_B.preis_verkauf < tankstelle_A.preis_verkauf:
             ersparnis_C_AB = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_A, Tankstelle_Ziel=tankstelle_B,
                                                      abstand=abstand_BC - abstand_AC)
-            aktivierung_C_AB = kunde.aktivierung(X=ersparnis_C_AB, uhrzeit=uhrzeit)
+            aktivierung_C_AB = kunde.aktivierung(X=ersparnis_C_AB, stress=kunde.stress_funktion(uhrzeit))
             wechsel_AB = aktivierung_C_AB * fluss_C
             wechsel_C_nach_A -= wechsel_AB
             wechsel_C_nach_B += wechsel_AB
@@ -156,7 +157,7 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
         if tankstelle_A.preis_verkauf < tankstelle_B.preis_verkauf:
             ersparnis_C_BA = kunde.ersparnis_pro_weg(Tankstelle_Start=tankstelle_B, Tankstelle_Ziel=tankstelle_A,
                                                      abstand=abstand_AC - abstand_BC)
-            aktivierung_C_BA = kunde.aktivierung(X=ersparnis_C_BA, uhrzeit=uhrzeit)
+            aktivierung_C_BA = kunde.aktivierung(X=ersparnis_C_BA, stress=kunde.stress_funktion(uhrzeit))
             wechsel_BA = aktivierung_C_BA * fluss_C
             wechsel_C_nach_B -= wechsel_BA
             wechsel_C_nach_A += wechsel_BA

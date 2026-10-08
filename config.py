@@ -6,11 +6,11 @@
 ### ALLGEMEIN 
 
 verbose_value = False       # Debug Information in der Console anzeigen
-uhrzeit:int = 12             # Uhrzeit der Simulation, 0-24 h. Von der Uhrzeit hangt der Stresswert der Kunden ab, was widerum ihre Entscheidung zu wechseln (Aktivierung) beeinflusst.
+uhrzeit:int = 12            # Uhrzeit der Simulation, 0-24 h. Von der Uhrzeit hangt der Stresswert der Kunden ab, was widerum ihre Entscheidung zu wechseln (Aktivierung) beeinflusst.
 app_nutzer_anteil = 1.0     # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen. 
                             # Die App erlaubt es von Tankstele C zu A oder B zu wechseln oder umgekehrt. Fur Wechselvorgange zwischen A und B ist dieser Wert irrelevant
 
-verkehr = 200               # Anzahl von Tankvorgangen pro Stunde
+verkehr = 1000              # Anzahl von Tankvorgangen am Tag an ALLEN TANKSTELLEN ZUSAMMEN! [Tankvorgang/Tag]
 
 
 ### TANKSTELLEN

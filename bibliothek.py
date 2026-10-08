@@ -189,9 +189,15 @@ def profit_volumen(kunde:Kunde, tankstelle_A, tankstelle_B, tankstelle_C,
 
         print("======")
 
-        print("Preis Tankstelle A: ", tankstelle_A.preis_verkauf, "Cent")
-        print("Preis Tankstelle B: ", tankstelle_B.preis_verkauf, "Cent")
-        print("Preis Tankstelle C: ", tankstelle_C.preis_verkauf, "Cent")
+        print("Verkaufspreis Tankstelle A: ", tankstelle_A.preis_verkauf, "Cent")
+        print("Verkaufspreis Tankstelle B: ", tankstelle_B.preis_verkauf, "Cent")
+        print("Verkaufspreis Tankstelle C: ", tankstelle_C.preis_verkauf, "Cent")
+
+        print("======")
+
+        print("Einkaufspreis Tankstelle A: ", tankstelle_A.preis_verkauf, "Cent")
+        print("Einkaufspreis Tankstelle B: ", tankstelle_B.preis_verkauf, "Cent")
+        print("Einkaufspreis Tankstelle C: ", tankstelle_C.preis_verkauf, "Cent")
 
         print("=======")
 

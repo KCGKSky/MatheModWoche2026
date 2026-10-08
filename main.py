@@ -32,7 +32,18 @@ kunden = [
     bib.Kunde(wendepunkt=config.wendepunkt_unbeschaftigt, quote=config.quote_unbeschaftigt)
 ]
 
-# PRINT INFORMATION
+### PRESENTATION START
+print("=== PROGRAMM START ===")
+dr.plot_einkommensverteilung(5, 200000)
+dr.plot_aktivierung(6, kunden, 500)
+plt.show(block=False)
+input("WEITER Mit Stress_funktion? : ")
+
+dr.plot_stress_function(0, kunden)
+plt.show(block=False)
+input("WEITER Information Darstellung? : ")
+
+## PRINT INFORMATION
 bib.profit_volumen(kunde=kunden[0], tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=True)
 #Preisempfehlung herausfinden
 a, b, c = bib.preis_zu_profit_tabelle(kunden, tankstelle_A, tankstelle_B, tankstelle_C)
@@ -40,7 +51,7 @@ print("Tankstelle Benzinpreisempfehlung: ", a.index(max(a)))
 print("Tankstelle Benzinpreisempfehlung: ", b.index(max(b)))
 print("Tankstelle Benzinpreisempfehlung: ", c.index(max(c)))
 
-input("WEITER Mit preis_optimierung Darstellung? : ")
+input("WEITER Mit Verlauf der Benzinpreiseinpendelung? : ")
 
 # Optimierung nachvollziehbar zeigen
 a, b, c = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=True)
@@ -48,20 +59,20 @@ print("=== Eingependelte Benzinpreise ===")
 print("Tankstelle A: ", a)
 print("Tankstelle B: ", b)
 print("Tankstelle C: ", c)
+dr.plot_konstellations_verlauf(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 24, 24, False)
+plt.show(block=False)
 
-input("WEITER mit Graphiken?: ")
-dr.plot_stress_function(0, kunden)
+input("WEITER mit Graphiken(Dauert circa 20 Sekunden)?: ")
+
 dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 dr.plot_preis_zu_profit(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, False)
 dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
+bib.profit_volumen(kunde=kunden[0], tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=True)
+plt.show(block=False)
 
-#dr.plot_stress_function(0, kunden)
-#dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-#dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-#dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-dr.plot_konstellations_verlauf(4, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 24, 24, False)
-plt.show()
+while(True):
+    answer = input("WEITER: END PROGRAMM (type 'yes')? :")
+    if answer == "YES" or answer == "yes" : break     
 
-
-#bib.optimal_konstellation(simultan = False, kunden=kunden, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)
+print("=== PROGRAMM ENDE ===")

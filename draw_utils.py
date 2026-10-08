@@ -152,5 +152,41 @@ def plot_konstellations_verlauf(figure_i, kunden, tankstelle_A, tankstelle_B, ta
     plt.legend()
     plt.grid(True)
 
+
+def plot_aktivierung(figure_i, kunden, end_val, uhrzeit=config.uhrzeit):
+    x = range(end_val)
+    
+    aktivierung_A, aktivierung_B, aktivierung_C = [0]*end_val, [0]*end_val, [0]*end_val
+    for i in x:
+        aktivierung_A[i] = kunden[0].aktivierung(i, uhrzeit)
+        aktivierung_B[i] = kunden[1].aktivierung(i, uhrzeit)
+        aktivierung_C[i] = kunden[2].aktivierung(i, uhrzeit)
+
+    plt.figure(figure_i)
+    plt.plot(aktivierung_A, label="Aktivierungsfunktion Vollzeit")
+    plt.plot(aktivierung_B, label="Aktivierungsfunktion Teilzeit")
+    plt.plot(aktivierung_C, label="Aktivierungsfunktion Unbeschaftigt")
+
+    plt.title("Aktivierung der Kunden")
+    plt.xlabel("Ersparnis pro Zeit [EUR/h]")
+    plt.ylabel("Anteil der Aktivierten")
+    plt.legend()
+    plt.grid(True)
+
+def plot_einkommensverteilung(figure_i, end_val):
+    def einkommen(x):
+        return np.exp(-(np.log(x) - np.log(54066))**2 / (2 * 0.5925**2)) / (x * 0.5925 * np.sqrt(2 * np.pi))
+    x = range(1, end_val)
+    einkommen_tabelle = [0]*end_val
+    for i in x:
+        einkommen_tabelle[i] = einkommen(i)
+        
+    plt.figure(figure_i)
+    plt.plot(einkommen_tabelle, label="Prozent der Bevolkerung Deutschland")
+    plt.title("Einkommensverteilung")
+    plt.xlabel("Brutto pro Jahr")
+    plt.ylabel("Prozent Bevolkerung")
+    
+
 #y = eingependelte_preise = bib.optimal_konstellation(80, kunde=kunde, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)
 #x = np.arange(0, 24, 0.1)

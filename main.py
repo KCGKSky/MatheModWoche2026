@@ -32,11 +32,12 @@ kunden = [
     bib.Kunde(wendepunkt=config.wendepunkt_unbeschaftigt, quote=config.quote_unbeschaftigt)
 ]
 
-
-dr.plot_profit_over_uhrzeit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-dr.plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
-dr.plot_stress_function(kunden)
+#dr.plot_stress_function(0, kunden)
+#dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
+dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
+#dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, True)
 
 plt.show()
+
 
 #bib.optimal_konstellation(simultan = False, kunden=kunden, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)

@@ -1,20 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
 import config as config
 import bibliothek as bib
 
 
-def plot_profit_over_uhrzeit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
+def plot_profit_over_uhrzeit_fest(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
     # for Tankstelle A, B und C
-    tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
-    for sim in range(start_val, end_val, 1):
-        tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.gesamt_profit_volumen(kunden=kunden,
+    def berechne_tabellen(mod_var):
+        tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
+        for sim in range(start_val, end_val, 1):
+            tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.gesamt_profit_volumen(kunden=kunden,
                                  tankstelle_A=tankstelle_A,
                                  tankstelle_B=tankstelle_B,
                                  tankstelle_C=tankstelle_C,
                                  uhrzeit=sim,
-                                 verbose=False
+                                 verbose=False,
+                                 app_nutzer_anteil=mod_var
                                  )
+        return tabelle_A, tabelle_B, tabelle_C
     # Only to display Info
     bib.profit_volumen(kunde=kunden[0],
                     tankstelle_A=tankstelle_A,
@@ -22,23 +26,51 @@ def plot_profit_over_uhrzeit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, s
                     tankstelle_C=tankstelle_C,
                     verbose=verbose
                     )
-        
-    plt.plot(tabelle_A, label="Tankstelle A")
-    plt.plot(tabelle_B, label="Tankstelle B")
-    plt.plot(tabelle_C, label="Tankstelle C")
+
+
+    fig = plt.figure(figure_i)
+    ax = fig.add_subplot(111)
+
+    tab_A, tab_B, tab_C = berechne_tabellen(config.app_nutzer_anteil)
+    line_A, = ax.plot(tab_A, label="Tankstelle A")
+    line_B, = ax.plot(tab_B, label="Tankstelle B")
+    line_C, = ax.plot(tab_C, label="Tankstelle C")
+
     plt.title("Feste Preise")
     plt.xlabel("Uhrzeit [h]")
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-    plt.show()
+
+    fig.subplots_adjust(bottom=0.22)
+    ax_slider = fig.add_axes([0.15, 0.07, 0.7, 0.04])
+    slider = Slider(
+        ax=ax_slider,
+        label="App-Nutzer-Anteil",
+        valmin=0.0,
+        valmax=1.0,
+        valinit=config.app_nutzer_anteil,
+        valstep=0.1,
+    )
+
+    def update(val):
+        a, b, c = berechne_tabellen(slider.val)
+        line_A.set_ydata(a)
+        line_B.set_ydata(b)
+        line_C.set_ydata(c)
+        ax.relim()
+        ax.autoscale_view()
+        fig.canvas.draw_idle()
+
+    slider.on_changed(update)
+    fig._slider = slider
 
 
-def plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
+def plot_profit_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
     # for Tankstelle A, B und C
     tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
     for sim in range(start_val, end_val, 1):
-        tankstelle_A.preis_verkauf, tankstelle_B.preis_verkauf, tankstelle_C.preis_verkauf = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C)
+        tankstelle_A.preis_verkauf, tankstelle_B.preis_verkauf, tankstelle_C.preis_verkauf = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit=sim)
         tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.gesamt_profit_volumen(kunden=kunden,
                                  tankstelle_A=tankstelle_A,
                                  tankstelle_B=tankstelle_B,
@@ -57,7 +89,8 @@ def plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tanks
                     tankstelle_C=tankstelle_C,
                     verbose=verbose
                     )
-
+    
+    plt.figure(figure_i)
     plt.plot(tabelle_A, label="Tankstelle A")
     plt.plot(tabelle_B, label="Tankstelle B")
     plt.plot(tabelle_C, label="Tankstelle C")
@@ -66,17 +99,17 @@ def plot_profit_over_uhrzeit_optimized(kunden, tankstelle_A, tankstelle_B, tanks
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-    plt.show()
+    
 
 
 
-def plot_preis_zu_profit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=False):
+def plot_preis_zu_profit(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbose=False):
     tabelle = bib.preis_zu_profit_tabelle(kunden=kunden,
                                   tankstelle_A=tankstelle_A,
                                   tankstelle_B=tankstelle_B,
                                   tankstelle_C=tankstelle_C,
                                   verbose=verbose)
-
+    plt.figure(figure_i)
     plt.plot(tabelle[0], label="Tankstelle A")
     plt.plot(tabelle[1], label="Tankstelle B")
     plt.plot(tabelle[2], label="Tankstelle C")
@@ -84,22 +117,45 @@ def plot_preis_zu_profit(kunden, tankstelle_A, tankstelle_B, tankstelle_C, verbo
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-    plt.show()
 
 
 
-def plot_stress_function(kunden):
+def plot_stress_function(figure_i, kunden):
     stress = [0]*24
     for i in range(0, 24, 1):
         stress[i] = kunden[0].stress_funktion(i)
 
+    plt.figure(figure_i)
     plt.plot(stress, label="Stress im Verkehr")
     plt.xlabel("Uhrzeit [h]")
     plt.ylabel("Stress")
+    plt.title("Stressfunktion")
     plt.legend()
     plt.grid(True)
-    plt.show()
-          
+
+def plot_preis_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
+    # for Tankstelle A, B und C
+    tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
+    for sim in range(start_val, end_val, 1):
+        tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit=sim)
+
+    #only to display info
+    bib.profit_volumen(kunde=kunden[0],
+                    tankstelle_A=tankstelle_A,
+                    tankstelle_B=tankstelle_B,
+                    tankstelle_C=tankstelle_C,
+                    verbose=verbose
+                    )
+    
+    plt.figure(figure_i)
+    plt.plot(tabelle_A, label="Tankstelle A")
+    plt.plot(tabelle_B, label="Tankstelle B")
+    plt.plot(tabelle_C, label="Tankstelle C")
+    plt.title("Optimale Benzinpreise")
+    plt.xlabel("Uhrzeit [h]")
+    plt.ylabel("Benzinpreis [C/L]")
+    plt.legend()
+    plt.grid(True)
 
 #y = eingependelte_preise = bib.optimal_konstellation(80, kunde=kunde, tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=False)
 #x = np.arange(0, 24, 0.1)

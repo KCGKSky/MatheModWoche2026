@@ -128,9 +128,9 @@ def plot_preis_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle
                     )
     
     plt.figure(figure_i)
-    plt.plot(tabelle_A, label="Tankstelle A")
-    plt.plot(tabelle_B, label="Tankstelle B")
-    plt.plot(tabelle_C, label="Tankstelle C")
+    plt.plot(tabelle_A, label="Tankstelle A", color="blue", linewidth=2, linestyle="solid")
+    plt.plot(tabelle_B, label="Tankstelle B", color="orange", linewidth=2, linestyle="solid")
+    plt.plot(tabelle_C, label="Tankstelle C", color="black", linewidth=2, linestyle="dashed")
     plt.title("Eingependelte Benzinpreise")
     plt.xlabel("Uhrzeit [h]")
     plt.ylabel("Benzinpreis [C/L]")

@@ -21,7 +21,7 @@ fluss_A = 0.45
 fluss_B = 0.45
 fluss_C = 0.1
 
-preis_start_A = 205 # Cent pro Liter
+preis_start_A = 200 # Cent pro Liter
 preis_start_B = 200 # Cent pro Liter
 preis_start_C = 190 # Cent pro Liter
 

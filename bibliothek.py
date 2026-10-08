@@ -435,6 +435,9 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
              None,
          )
          if start is not None:
+             print(verlauf)
+             if verlauf == True:
+                 return konstellationen
              loop = konstellationen[start:]
              if len(loop) == 2:
                  if verbose == True : print("=== STABILER ZUSTAND ERREICHT ===")
@@ -446,8 +449,6 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                        loop[0][2],
                        " C = ",
                        loop[0][3])
-                 if verlauf == True:
-                     return konstellationen
                  return loop[0][1:]  # remove the Durchlauf number and return only the prices
              else:
                   if verbose == True : print("=== LOOP ERREICHT ===")
@@ -488,8 +489,5 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                       print("B = ", durchschnitt_konstellation[1])
                       print("C = ", durchschnitt_konstellation[2])
                       print(durchschnitt_konstellation)
-                  print(verlauf)
-                  if verlauf == True:
-                      return konstellationen
-                  else:
-                      return durchschnitt_konstellation
+
+                  return durchschnitt_konstellation

@@ -138,7 +138,10 @@ def plot_preis_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle
     plt.grid(True, "major", linestyle="dashed")
 
 def plot_konstellations_verlauf(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
-    konstellationen = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit_start=start_val, uhrzeit_end=end_val, verlauf=True)
+    tankstelle_A.preis_verkauf = config.preis_start_A
+    tankstelle_B.preis_verkauf = config.preis_start_B
+    tankstelle_C.preis_verkauf = config.preis_start_C
+    konstellationen = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit_start=start_val, uhrzeit_end=end_val, verbose=False, simultan = True, verlauf=True)
     konstellation_A = [konstellationen[i][1] for i in range(len(konstellationen))]
     konstellation_B = [konstellationen[i][2] for i in range(len(konstellationen))]
     konstellation_C = [konstellationen[i][3] for i in range(len(konstellationen))]
@@ -195,7 +198,6 @@ def plot_verkehrs_vorkommen(figure_i):
     verkehr_vorkommen_tabelle = [0]*24
     for i in x:
         verkehr_vorkommen_tabelle[i] = bib.verkehrs_vorkommen(i)
-        
     plt.figure(figure_i)
     plt.plot(verkehr_vorkommen_tabelle, label="Anteil der Tankvorgange", color="black", linewidth=2, linestyle="dashed")
     plt.title("Verteilung der durchschnittlichen Tankvorgange")

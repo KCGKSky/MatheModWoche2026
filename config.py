@@ -7,14 +7,14 @@
 
 verbose_value = False      # Debug Information in der Console anzeigen
 uhrzeit:int = 7            # Uhrzeit der Simulation, 0-24 h
-app_nutzer_anteil = .5    # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen
+app_nutzer_anteil = 1.0    # Anzahl der Nutzer die eine Preis-Vergleichsapp nutzen
 verkehr = 200 # Anzahl von Tanken pro Stunde
 
 
 ### TANKSTELLEN
 
 abstand_AB = 1
-abstand_BC = 5
+abstand_BC = 7
 abstand_AC = 5
 
 fluss_A = 0.5

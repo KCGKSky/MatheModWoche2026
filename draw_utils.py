@@ -27,50 +27,28 @@ def plot_profit_over_uhrzeit_fest(figure_i, kunden, tankstelle_A, tankstelle_B, 
                     verbose=verbose
                     )
 
-
+  
     fig = plt.figure(figure_i)
     ax = fig.add_subplot(111)
 
     tab_A, tab_B, tab_C = berechne_tabellen(config.app_nutzer_anteil)
-    line_A, = ax.plot(tab_A, label="Tankstelle A")
-    line_B, = ax.plot(tab_B, label="Tankstelle B")
-    line_C, = ax.plot(tab_C, label="Tankstelle C")
-
+    ax.plot(tab_A, label="Tankstelle A")
+    ax.plot(tab_B, label="Tankstelle B")
+    ax.plot(tab_C, label="Tankstelle C")
+    
     plt.title("Feste Preise")
     plt.xlabel("Uhrzeit [h]")
     plt.ylabel("Profit [EUR]")
     plt.legend()
     plt.grid(True)
-
-    fig.subplots_adjust(bottom=0.22)
-    ax_slider = fig.add_axes([0.15, 0.07, 0.7, 0.04])
-    slider = Slider(
-        ax=ax_slider,
-        label="App-Nutzer-Anteil",
-        valmin=0.0,
-        valmax=1.0,
-        valinit=config.app_nutzer_anteil,
-        valstep=0.1,
-    )
-
-    def update(val):
-        a, b, c = berechne_tabellen(slider.val)
-        line_A.set_ydata(a)
-        line_B.set_ydata(b)
-        line_C.set_ydata(c)
-        #ax.relim()
-        #ax.autoscale_view()
-        fig.canvas.draw_idle()
-
-    slider.on_changed(update)
-    fig._slider = slider
+    
 
 
 def plot_profit_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle_B, tankstelle_C, start_val, end_val, verbose):
     # for Tankstelle A, B und C
     tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
     for sim in range(start_val, end_val, 1):
-        tankstelle_A.preis_verkauf, tankstelle_B.preis_verkauf, tankstelle_C.preis_verkauf = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit=sim)
+        tankstelle_A.preis_verkauf, tankstelle_B.preis_verkauf, tankstelle_C.preis_verkauf = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit_start=sim, uhrzeit_end=sim)
         tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.gesamt_profit_volumen(kunden=kunden,
                                  tankstelle_A=tankstelle_A,
                                  tankstelle_B=tankstelle_B,
@@ -137,7 +115,7 @@ def plot_preis_over_uhrzeit_optimized(figure_i, kunden, tankstelle_A, tankstelle
     # for Tankstelle A, B und C
     tabelle_A, tabelle_B, tabelle_C = [0]*end_val, [0]*end_val, [0]*end_val
     for sim in range(start_val, end_val, 1):
-        tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit=sim)
+        tabelle_A[sim], tabelle_B[sim], tabelle_C[sim] = bib.optimal_konstellation(kunden, tankstelle_A, tankstelle_B, tankstelle_C, uhrzeit_start=sim, uhrzeit_end=sim)
 
     #only to display info
     bib.profit_volumen(kunde=kunden[0],

@@ -33,22 +33,7 @@ class Kunde:
         return 0.01 * ( self.tankvolumen * (Tankstelle_Start.preis_verkauf - Tankstelle_Ziel.preis_verkauf) ) / ( abstand / self.fahrer_geschwindigkeit ) # EUR/h
     
     def stress_funktion(self, uhrzeit:int=config.uhrzeit):
-        # 24-Stunden-Periodizität
-        x24 = uhrzeit % 24
-
-        # bisherige Tagesfunktion
-        f = (
-           27 * np.exp(-((x24 - 7.5) / 2)**2)
-            + 8 * np.exp(-((x24 - 12.5) / 3)**2)
-            + 19 * np.exp(-((x24 - 17.5) / 2.3)**2)
-        ) / 27
-
-        # Sinusfunktion
-        s = np.sin(2 * np.pi * uhrzeit / 24 - 2 * np.pi) + 1
-
-        # miteinander verrechnen
-        stress_faktor = 0.1 * f * s + 1
-        #stress_faktor = 1
+        stress_faktor = 1.533087 - 0.004569 * np.cos(np.pi*uhrzeit/12) + 0.227296 * np.sin(np.pi*uhrzeit/12) - 0.083494 * np.cos(np.pi*uhrzeit/6) + 0.163494 * np.sin(np.pi*uhrzeit/6) + 0.023972 * np.cos(np.pi*uhrzeit/4) - 0.476762 * np.sin(np.pi*uhrzeit/4)
         return stress_faktor
 
 

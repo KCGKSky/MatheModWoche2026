@@ -25,7 +25,7 @@ class Kunde:
             return 0
         if self.wendepunkt == 0:
             return 1
-        b = 1.046* self.wendepunkt * self.stress_funktion(uhrzeit)
+        b = 1.046 * self.wendepunkt * self.stress_funktion(uhrzeit)
         anteil = (1 + (X/b) ** -a) ** -p
         return anteil
 
@@ -333,7 +333,7 @@ def preis_zu_profit_tabelle(kunden:list, tankstelle_A, tankstelle_B, tankstelle_
 
     return tabelle_A, tabelle_B, tabelle_C
 
-def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = True, uhrzeit_start:int = config.uhrzeit, uhrzeit_end:int = config.uhrzeit, verlauf :bool = False):
+def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C, verbose=config.verbose_value, simultan:bool = False, uhrzeit_start:int = config.uhrzeit, uhrzeit_end:int = config.uhrzeit, verlauf :bool = False):
     """
     Berechnet so lange die optimalen Verkaufspreise für die Tankstellen, bis sich eine Konstellation wiederholt. Gibt die Konstellation zurück, die sich wiederholt.
     """
@@ -431,32 +431,45 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
                        loop[0][3])
                  return loop[0][1:]  # remove the Durchlauf number and return only the prices
              else:
-                 if verbose == True : print("=== LOOP ERREICHT ===")
-                 if verbose == True:
-                     for konstellation in loop:
-                         print(
-                             "Konstellation ",
-                             konstellation[0],
-                             ": A = ",
-                             konstellation[1],
-                             " B = ",
-                             konstellation[2],
-                             " C = ",
-                             konstellation[3],
-                         )
-                 preisbereiche = []
-                 for tankstelle in range(1, 4):
-                     werte = [konstellation[tankstelle] for konstellation in loop]
-                     preisbereiche.append(min(werte))
-                     preisbereiche.append(max(werte))
-                 if verbose == True :
-                     print("=== PREISRANGE IM LOOP ===")
-                     print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
-                     print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
-                     print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
-                     print("Loop-Länge: ", len(loop)-1)
-                     print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
-                     print(loop[0][1:])
-                 if verlauf:
-                     return konstellationen
-                 return loop[0][1:] # remove the Durchlauf number and return only the prices
+                  if verbose == True : print("=== LOOP ERREICHT ===")
+                  if verbose == True:
+                      for konstellation in loop:
+                          print(
+                              "Konstellation ",
+                              konstellation[0],
+                              ": A = ",
+                              konstellation[1],
+                              " B = ",
+                              konstellation[2],
+                              " C = ",
+                              konstellation[3],
+                          )
+                  preisbereiche = []
+                  for tankstelle in range(1, 4):
+                      werte = [konstellation[tankstelle] for konstellation in loop]
+                      preisbereiche.append(min(werte))
+                      preisbereiche.append(max(werte))
+                  if verbose == True :
+                      print("=== PREISRANGE IM LOOP ===")
+                      print("Tankstelle A: ", preisbereiche[0], "-", preisbereiche[1])
+                      print("Tankstelle B: ", preisbereiche[2], "-", preisbereiche[3])
+                      print("Tankstelle C: ", preisbereiche[4], "-", preisbereiche[5])
+                      print("Loop-Länge: ", len(loop)-1)
+                      print("Loop gefunden nach ", len(konstellationen), " Durchläufen")
+
+                  # Berechne Durchschnitt der Konstellationen im Loop
+                  durchschnitt_A = np.mean([konstellation[1] for konstellation in loop])
+                  durchschnitt_B = np.mean([konstellation[2] for konstellation in loop])
+                  durchschnitt_C = np.mean([konstellation[3] for konstellation in loop])
+                  durchschnitt_konstellation = [int(round(durchschnitt_A)), int(round(durchschnitt_B)), int(round(durchschnitt_C))]
+
+                  if verbose == True:
+                      print("=== DURCHSCHNITTSKONSTELLATION IM LOOP ===")
+                      print("A = ", durchschnitt_konstellation[0])
+                      print("B = ", durchschnitt_konstellation[1])
+                      print("C = ", durchschnitt_konstellation[2])
+                      print(durchschnitt_konstellation)
+
+                  if verlauf:
+                      return konstellationen
+                  return durchschnitt_konstellation

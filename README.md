@@ -5,7 +5,7 @@ Wir bedanken uns herzlich, dass wir teilnehmen durften und uns eine Woche lang m
 
 ## Vorstellung
 
-Die Modellierungswoche fand an der Reinhardswaldschule in Fuldatal mit insgesamt 40 mathematikbegabten Schüler/innen, welche in Acht Arbeitsgruppen aufgeteilt wurden, statt.
+Die Modellierungswoche fand an der Reinhardswaldschule in Fuldatal, Hessen mit insgesamt 40 mathematikbegabten Schüler/innen, welche in Acht Arbeitsgruppen aufgeteilt wurden, statt.
 Dabei hat jede Gruppe ein Optimierungsproblem aus der Wirtschaft und Industrie mithilfe von mathematischen Ansätzen und Python gelöst, und anschließend am Ende der Woche in einem 20 min Vortrag im Plenum präsentiert.
 
 Wir haben innerhalb der Modellierungswoche die Aufgabe der **Benzinpreisoptimierung: "Benzinpreiskampf"** bearbeitet.

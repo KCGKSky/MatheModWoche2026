@@ -435,7 +435,7 @@ def optimal_konstellation(kunden:list, tankstelle_A, tankstelle_B, tankstelle_C,
              None,
          )
          if start is not None:
-             print(verlauf)
+             if verbose == True : print(verlauf)
              if verlauf == True:
                  return konstellationen
              loop = konstellationen[start:]

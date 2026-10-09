@@ -6,9 +6,13 @@ Wir bedanken uns herzlich, dass wir teilnehmen durften und uns eine Woche lang m
 ## Vorstellung
 
 Wir sind eine fünfköpfige Gruppe mathematikinteressierter Schüler und haben die Aufgabe der Benzinpreisoptimierung innerhalb der Modellierungswoche bearbeitet.
-Es gab insgesamt acht Problemstellungen. In `Material/Aufgaben2026` finden sie die anderen Optimierungsprobleme.
+Es gab insgesamt acht Problemstellungen.
 
-In diesem Projekt beschäftigen wir uns mit der Frage, wie sich die Preise von drei Tankstellen gegenseitig beeinflussen. Wir haben dafür ein eigenes mathematisches Modell entwickelt, mit dem wir untersuchen, wie Kundinnen und Kunden auf unterschiedliche Benzinpreise reagieren und welche Preise für die Tankstellen besonders profitabel sein könnten. In `Presentation Material/benzinpreiskampf_presentation.pdf` finden sie eine anschauliche Presentation.
+In `Material/Aufgaben2026` finden sie die anderen Optimierungsprobleme.
+
+In diesem Projekt beschäftigen wir uns mit der Frage, wie sich die Preise von drei Tankstellen gegenseitig beeinflussen. Wir haben dafür ein eigenes mathematisches Modell entwickelt, mit dem wir untersuchen, wie Kundinnen und Kunden auf unterschiedliche Benzinpreise reagieren und welche Preise für die Tankstellen besonders profitabel sein könnten. 
+
+In `Presentation Material/benzinpreiskampf_presentation.pdf` finden sie eine anschauliche Presentation.
 
 ## Problemdarstellung
 
@@ -50,7 +54,7 @@ Sie haben freie Hand selber mit dem Modell zu experimentieren und eigene Werte f
 
 Ihr braucht Python 3 sowie die Bibliotheken `numpy` und `matplotlib`.
 
-Ladet zunächst das Repository herunter:
+Ladet zunächst die Github Repository herunter:
 
 ```bash
 git clone https://github.com/KCGKSky/MatheModWoche2026.git

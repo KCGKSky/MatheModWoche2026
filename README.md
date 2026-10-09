@@ -1,9 +1,20 @@
 # MatheModWoche 2026 – Benzinpreiskampf
 
-In diesem Projekt beschäftigen wir uns mit der Frage, wie sich die Preise von drei Tankstellen gegenseitig beeinflussen. Wir haben dafür ein eigenes mathematisches Modell entwickelt, mit dem wir untersuchen, wie Kundinnen und Kunden auf unterschiedliche Benzinpreise reagieren und welche Preise für die Tankstellen besonders profitabel sein könnten.
+Das Projekt ist während der **Mathematik-Modellierungswoche 2026** in Kassel-Fuldatal in Hessen entstanden. Die Modellierungswoche wurde vom **Zentrum für Mathematik e. V.** organisiert.
+Wir bedanken uns herzlich, dass wir teilnehmen durften und uns eine Woche lang mit dieser Aufgabe beschäftigen konnten.
 
-Das Projekt ist während der **Mathematik-Modellierungswoche 2026** entstanden. Wir sind eine fünfköpfige Gruppe mathematikinteressierter Schüler und haben die Aufgabe innerhalb einer Woche bearbeitet.
-Es gab insgesamt acht Problemstellungen. In `Material/Aufgaben2026` finden sie die anderen Optimierungsprobleme. 
+## Vorstellung
+
+Die Modellierungswoche fand an der Reinhardswaldschule in Fuldatal, Hessen mit insgesamt 40 mathematikbegabten Schüler/innen, welche in Acht Arbeitsgruppen aufgeteilt wurden, statt.
+Dabei hat jede Gruppe ein Optimierungsproblem aus der Wirtschaft und Industrie mithilfe von mathematischen Ansätzen und Python gelöst, und anschließend am Ende der Woche in einem 20 min Vortrag im Plenum präsentiert.
+
+Wir haben innerhalb der Modellierungswoche die Aufgabe der **Benzinpreisoptimierung: "Benzinpreiskampf"** bearbeitet.
+
+In `Material/Aufgaben2026` finden sie die Optimierungsprobleme der anderen Arbeitsgruppen.
+
+In diesem Projekt beschäftigen wir uns mit der Frage der **Benzinpreisoptimierung** bei konkurrierenden Tankstellen. Wir haben dafür ein eigenes mathematisches Modell entwickelt, mit dem wir untersuchen, wie Kundinnen und Kunden auf unterschiedliche Benzinpreise reagieren und welche Preise für die Tankstellen besonders profitabel sein könnten.
+
+In `Presentation Material/benzinpreiskampf_presentation.pdf` finden sie eine anschauliche Präsentation, die den Sachverhalt darstellt.
 
 ## Problemdarstellung
 
@@ -11,7 +22,7 @@ Wir betrachten drei Tankstellen: A, B und C. Sie unterscheiden sich unter andere
 
 Diese Entscheidungen versuchen wir im Modell nachzubilden. Dabei spielen zum Beispiel die Uhrzeit, das Verkehrsaufkommen, die Nutzung einer Preisvergleichs-App und unterschiedliche Kundengruppen eine Rolle. Anschließend berechnet das Programm, wie sich die Kundenverteilung und die Gewinne verändern, wenn die Tankstellen ihre Preise anpassen.
 
-Die Ergebnisse werden in verschiedenen Diagrammen dargestellt.
+Die Ergebnisse der Modellsimulation werden vom interaktiven Python-Program als `matplotlib` Diagramme geplotted und die bedeutungsvollen Informationen in der Konsole ausgegeben.
 
 ## Dateibedeutung
 
@@ -26,7 +37,8 @@ Die Ergebnisse werden in verschiedenen Diagrammen dargestellt.
 
 ## Anpassung der Modellierungswerte in `config.py`
 
-Die Einstellungen befinden sich in `config.py`. Die Parameter werden innerhalb der Configdatei nochmal erklärt.
+Die Konfiguration befindet sich in `config.py`. Die Parameter werden innerhalb der Konfig-Datei nochmal genauer erklärt.\
+**Sie haben freie Hand selber mit dem Modell zu experimentieren** und eigene Werte festzulegen.
 
 - `uhrzeit`: Zu welcher Uhrzeit die Simulation betrachtet wird.
 - `app_nutzer_anteil`: Wie viele Kundinnen und Kunden eine Preisvergleichs-App nutzen.
@@ -44,7 +56,7 @@ Die Einstellungen befinden sich in `config.py`. Die Parameter werden innerhalb d
 
 Ihr braucht Python 3 sowie die Bibliotheken `numpy` und `matplotlib`.
 
-Ladet zunächst das Repository herunter:
+Ladet zunächst die Github Repository herunter:
 
 ```bash
 git clone https://github.com/KCGKSky/MatheModWoche2026.git
@@ -65,19 +77,16 @@ python main.py
 
 Falls der Befehl `python` bei euch nicht funktioniert, probiert `python3`.
 
-## Was passiert beim Ausführen?
-
-Das Programm erstellt mehrere Diagramme und führt verschiedene Berechnungen durch. Dabei werden unter anderem das modellierte Kundenverhalten, die Gewinne der Tankstellen und mögliche Preisentwicklungen betrachtet. Zum Schluss werden auch optimierte Preise berechnet und dargestellt.
-
-Zwischen einzelnen Abschnitten wartet das Programm auf eine Eingabe in der Konsole. Folgt einfach der Aufforderung, um weiterzumachen. Je nach Einstellungen kann die Berechnung etwas dauern.
-
 ## Ein Hinweis zum Modell
 
 Natürlich bildet unser Modell die Wirklichkeit nicht vollständig ab. Das Verhalten von Menschen und die Preisgestaltung an Tankstellen sind deutlich komplexer, als es sich mit einigen Parametern darstellen lässt. Die Ergebnisse hängen deshalb stark von den Annahmen und Einstellungen ab. Das Modell soll vor allem helfen, Zusammenhänge zu untersuchen und verschiedene Szenarien miteinander zu vergleichen.
 
-DISCLAIMER: Der Code ist zwar nicht schön, aber er wurde ohne KI geschrieben. 
-Jede Zeile Code ist von einem von uns geschrieben worden. 
-Der Code ist Endprodukt einer einwöchigen, anspruchsvollen Gruppenarbeit und ist von unserem unmittelbaren Lernprozess gezeichnet.
+**DISCLAIMER:** Der Code ist zwar nicht schön, aber er wurde *ohne KI* geschrieben.
+Jede Zeile Code ist von einem von uns geschrieben worden. Insgesamt steckt hinter dem Projekt ein Aufwand von circa 8-10 Stunden Arbeit an 4 Tagen von 5 Gruppenmitgliedern.\
+Das ergibt circa. **160 Arbeitsstunden.** \
+Auch haben wir viele neue Kenntnisse innerhalb der Woche erlernt.
+
+**Das heißt:** Der Code ist das Endprodukt einer einwöchigen, anspruchsvollen Gruppenarbeit und ist von unserem unmittelbaren Lernprozess gezeichnet. 
 
 ## Danke
 

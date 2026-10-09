@@ -83,9 +83,10 @@ Natürlich bildet unser Modell die Wirklichkeit nicht vollständig ab. Das Verha
 
 **DISCLAIMER:** Der Code ist zwar nicht schön, aber er wurde *ohne KI* geschrieben.
 Jede Zeile Code ist von einem von uns geschrieben worden. Insgesamt steckt hinter dem Projekt ein Aufwand von circa 8-10 Stunden Arbeit an 4 Tagen von 5 Gruppenmitgliedern.\
-Das ergibt circa. 160 Arbeitsstunden.\
-Auch haben wir viele neue Kenntnisse innerhalb der Woche erlernt.\
-Das heißt: Der Code ist das Endprodukt einer einwöchigen, anspruchsvollen Gruppenarbeit und ist von unserem unmittelbaren Lernprozess gezeichnet. 
+Das ergibt circa. **160 Arbeitsstunden.** \
+Auch haben wir viele neue Kenntnisse innerhalb der Woche erlernt.
+
+**Das heißt:** Der Code ist das Endprodukt einer einwöchigen, anspruchsvollen Gruppenarbeit und ist von unserem unmittelbaren Lernprozess gezeichnet. 
 
 ## Danke
 

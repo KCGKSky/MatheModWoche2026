@@ -12,7 +12,8 @@ Wir haben innerhalb der Modellierungswoche die Aufgabe der **Benzinpreisoptimier
 
 In `Material/Aufgaben2026` finden sie die Optimierungsprobleme der anderen Arbeitsgruppen.
 
-In diesem Projekt beschäftigen wir uns mit der Frage der **Benzinpreisoptimierung** bei konkurrierenden Tankstellen. Wir haben dafür ein eigenes mathematisches Modell entwickelt, mit dem wir untersuchen, wie Kundinnen und Kunden auf unterschiedliche Benzinpreise reagieren und welche Preise für die Tankstellen besonders profitabel sein könnten.\
+In diesem Projekt beschäftigen wir uns mit der Frage der **Benzinpreisoptimierung** bei konkurrierenden Tankstellen. Wir haben dafür ein eigenes mathematisches Modell entwickelt, mit dem wir untersuchen, wie Kundinnen und Kunden auf unterschiedliche Benzinpreise reagieren und welche Preise für die Tankstellen besonders profitabel sein könnten.
+
 In `Presentation Material/benzinpreiskampf_presentation.pdf` finden sie eine anschauliche Präsentation, die den Sachverhalt darstellt.
 
 ## Problemdarstellung

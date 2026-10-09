@@ -36,7 +36,7 @@ kunden = [
 print("=== PROGRAMM START ===")
 print("Einkommensverteilung und Aktivierungsfunktion zeichnen...")
 dr.plot_einkommensverteilung(5, 200000)
-dr.plot_aktivierung(6, kunden, 250)
+dr.plot_aktivierung(6, kunden, 150)
 plt.show(block=False)
 input("\nWEITER... Mit Stress_funktion? : ")
 
@@ -73,7 +73,6 @@ print("Rechnen und visualisieren...")
 dr.plot_profit_over_uhrzeit_fest(1, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 dr.plot_profit_over_uhrzeit_optimized(2, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
 dr.plot_preis_over_uhrzeit_optimized(3, kunden, tankstelle_A, tankstelle_B, tankstelle_C, 0, 24, False)
-bib.profit_volumen(kunde=kunden[0], tankstelle_A=tankstelle_A, tankstelle_B=tankstelle_B, tankstelle_C=tankstelle_C, verbose=True)
 plt.show(block=False)
 
 while(True):

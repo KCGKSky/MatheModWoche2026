@@ -20,7 +20,7 @@ In `Presentation Material/benzinpreiskampf_presentation.pdf` finden sie eine ans
 
 Wir betrachten drei Tankstellen: A, B und C. Sie unterscheiden sich unter anderem durch ihre Einkaufspreise und die Entfernung zueinander. Kundinnen und Kunden haben unterschiedliche Gewohnheiten und entscheiden nicht alle gleich: Manche bleiben bei ihrer gewohnten Tankstelle, andere vergleichen Preise und nehmen dafür auch einen Umweg in Kauf.
 
-![Modell Architektur]("PresentationMaterial/screenshot_modell_diagramm.png")
+![Modell Architektur](PresentationMaterial/screenshot_modell_diagramm.png)
 
 Diese Entscheidungen versuchen wir im Modell nachzubilden. Dabei spielen zum Beispiel die Uhrzeit, das Verkehrsaufkommen, die Nutzung einer Preisvergleichs-App und unterschiedliche Kundengruppen eine Rolle. Anschließend berechnet das Programm, wie sich die Kundenverteilung und die Gewinne verändern, wenn die Tankstellen ihre Preise anpassen.
 
